@@ -35,7 +35,7 @@ jQuery(function($){
                 class: 'iv-main-div'
             });
 
-            $.get(chrome.extension.getURL('iv-main.html'), function(htmls) {
+            $.get(chrome.extension.getURL('html/iv-main.html'), function(htmls) {
                 main.html(htmls);
             });
 
@@ -88,7 +88,7 @@ jQuery(function($){
                     });
 
                     //Load menu html
-                    $.get(chrome.extension.getURL('yt-iv-menu-dropdown.html'), function(htmls) {
+                    $.get(chrome.extension.getURL('html/yt-iv-menu-dropdown.html'), function(htmls) {
                         menu.html(htmls);
                     });
 
@@ -146,7 +146,7 @@ jQuery(function($){
                 class: 'iv-main-div'
             });
 
-            $.get(chrome.extension.getURL('iv-main.html'), function(htmls) {
+            $.get(chrome.extension.getURL('html/iv-main.html'), function(htmls) {
                 main.html(htmls);
             });
 
@@ -179,7 +179,7 @@ jQuery(function($){
                     });
 
                     //Load menu html
-                    $.get(chrome.extension.getURL('iv-menu-dropdown.html'), function(htmls) {
+                    $.get(chrome.extension.getURL('html/iv-menu-dropdown.html'), function(htmls) {
                         menu.html(htmls);
                     });
 
