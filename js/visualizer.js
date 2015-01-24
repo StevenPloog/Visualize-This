@@ -37,16 +37,6 @@ var iVisual = {
             main.html(htmls);
         });
 
-        /*main.on('click', function() {
-            //$('#iv-main-div').fadeOut();
-            //$('#player').removeClass('visualize');
-            if (iVisual.drawing) {
-                iVisual.endDrawLoop();
-            } else {
-                iVisual.startDrawLoop();
-            }
-        });*/
-
         $('.html5-video-container').append(main);
         $("#iv-main-div").hide();
     },
