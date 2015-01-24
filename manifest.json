@@ -21,6 +21,6 @@
 		"js/visualizer.js",
 		"css/*.css",
 		"images/*.png",
-		“html/*.html"
+		"html/*.html"
 	]
 }
