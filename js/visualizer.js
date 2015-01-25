@@ -1,5 +1,6 @@
 var sampleRate = 0;
 var frequencyPerBin = 0;
+var decibelRange = 1;
 
 Visualizer = (function(){
     
@@ -31,6 +32,7 @@ Visualizer = (function(){
                 
                 sampleRate = this.ctx.sampleRate;
                 frequencyPerBin = sampleRate / this.analyser.fftSize;
+                decibelRange = this.analyser.maxDecibels - this.analyser.minDecibels;
             }
         },
     
@@ -138,6 +140,11 @@ function dWeight(f) {
     return 20 * Math.log10(r);
 }
 
+function nonNegative(x) {
+    if (x >= 0) return x;
+    return 0;
+}
+
 function drawSpectrum(analyser, reverse) {
     var myCanvas = $('#iv-canvas').get(0);
     var drawContext = myCanvas.getContext('2d');
@@ -148,16 +155,18 @@ function drawSpectrum(analyser, reverse) {
 
     var maxFreq = 790;
     var slicesPerBar = 10;
-    for (var i = 0; i < maxFreq; i += slicesPerBar) {
+    for (var i = 1; i < maxFreq; i += slicesPerBar) {
         var value = 0;
 
         for (var x = 0; x < slicesPerBar; x++) {
-            value += (freqDomain[i+x] - analyser.minDecibels);
+            value += freqDomain[i+x];
+            value -= analyser.minDecibels;
             value -= weight(frequencyPerBin * (i+x));
         }
         value /= slicesPerBar;
+        value = nonNegative(value);
 
-        var percent = value / (analyser.maxDecibels - analyser.minDecibels);
+        var percent = value / decibelRange;
         var height = myCanvas.height * percent;
         var offset = myCanvas.height - height - 1;
         var barWidth =  myCanvas.width/maxFreq;
@@ -176,10 +185,10 @@ function drawMirrorSpectrum(analyser) {
 function drawMiddleSpectrum(analyser) {
     var myCanvas = $('#iv-canvas').get(0);
     var drawContext = myCanvas.getContext('2d');
-    var freqDomain = new Uint8Array(analyser.frequencyBinCount);
+    var freqDomain = new Float32Array(analyser.frequencyBinCount);
 
     drawContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-    analyser.getByteFrequencyData(freqDomain);
+    analyser.getFloatFrequencyData(freqDomain);
 
     var maxFreq = 725;
     var slicesPerBar = 5;
@@ -188,10 +197,13 @@ function drawMiddleSpectrum(analyser) {
 
         for (var x = 0; x < slicesPerBar; x++) {
             value += freqDomain[i+x];
+            value -= analyser.minDecibels;
+            value -= weight(frequencyPerBin * (i+x));
         }
         value /= slicesPerBar;
+        value = nonNegative(value);
 
-        var percent = value / 256;
+        var percent = value / decibelRange;
         var height = myCanvas.height * percent;
         height *= .5;
         //var height = myCanvas.height/maxFreq;
@@ -212,10 +224,10 @@ function drawMiddleSpectrum(analyser) {
 function drawCircles(analyser) {
     var myCanvas = $('#iv-canvas').get(0);
     var drawContext = myCanvas.getContext('2d');
-    var freqDomain = new Uint8Array(analyser.frequencyBinCount);
+    var freqDomain = new Float32Array(analyser.frequencyBinCount);
 
     drawContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-    analyser.getByteFrequencyData(freqDomain);
+    analyser.getFloatFrequencyData(freqDomain);
 
     var maxFreq = 900;
     var numRows = 30;
@@ -226,16 +238,19 @@ function drawCircles(analyser) {
         for (var col = 0; col < numCols; col++) {
             var value = 0;
             for (var i = 0; i < samplesPerCircle; i++) {
-            value += freqDomain[samplesPerCircle*(row * col) + i];
+                value += freqDomain[samplesPerCircle*(row * col) + i];
+                value -= analyser.minDecibels;
+                value -= weight(frequencyPerBin * (samplesPerCircle*(row * col) + i));
             }
             value = value/samplesPerCircle;
+            value = nonNegative(value);
 
             //Radius is max*percent of max
-            var radius = maxRadius * value / 256;
+            var radius = maxRadius * value / decibelRange;
             var x = 4*maxRadius + maxRadius*2*(col-1) + .5*myCanvas.width - maxRadius*numCols*2;
             var y = 3*maxRadius + maxRadius*2*(row-1);
             //var hue = samplesPerCircle*(row * col) / maxFreq * 360;
-            var hue = value / 256;
+            var hue = value / decibelRange;
             hue = (.9-hue) * 360;
 
             drawContext.beginPath();
@@ -254,11 +269,11 @@ function drawCircles(analyser) {
 function drawCircles2(analyser) {
     var myCanvas = $('#iv-canvas').get(0);
     var drawContext = myCanvas.getContext('2d');
-    var freqDomain = new Uint8Array(analyser.frequencyBinCount);
+    var freqDomain = new Float32Array(analyser.frequencyBinCount);
 
     drawContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-    analyser.getByteFrequencyData(freqDomain);
-
+    analyser.getFloatFrequencyData(freqDomain);
+    
     var maxFreq = 900;
     var numRows = 30;
     var numCols = 30;
@@ -271,11 +286,14 @@ function drawCircles2(analyser) {
                 var index = samplesPerCircle*col;// *row;
                 index += i + samplesPerCircle*row*numCols;
                 value += freqDomain[index];
+                value -= analyser.minDecibels;
+                value -= weight(frequencyPerBin * index);
             }
             value = value/samplesPerCircle;
+            value = nonNegative(value);
 
             //Radius is max*percent of max
-            var radius = maxRadius * value / 256;
+            var radius = maxRadius * value / decibelRange;
             var x = maxRadius*2*(col-1)+ .5*myCanvas.width;// - maxRadius*numCols*2;
             var y = maxRadius + maxRadius*2*(row-1);
             //var hue = (samplesPerCircle*col + samplesPerCircle*row*numCols) / maxFreq * 360;
@@ -298,11 +316,11 @@ function drawCircles2(analyser) {
 function drawSquares(analyser) {
     var myCanvas = $('#iv-canvas').get(0);
     var drawContext = myCanvas.getContext('2d');
-    var freqDomain = new Uint8Array(analyser.frequencyBinCount);
+    var freqDomain = new Float32Array(analyser.frequencyBinCount);
 
     drawContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-    analyser.getByteFrequencyData(freqDomain);
-
+    analyser.getFloatFrequencyData(freqDomain);
+    
     var maxFreq = 900;
     var numRows = 30;
     var numCols = 30;
@@ -316,12 +334,15 @@ function drawSquares(analyser) {
                 var index = samplesPer*col;// *row;
                 index += i + samplesPer*row*numCols;
                 value += freqDomain[index];
+                value -= analyser.minDecibels;
+                value -= weight(frequencyPerBin * index);
             }
             value = value/samplesPer;
+            value = nonNegative(value);
 
             var x = .5*myCanvas.width - colorLength*.5 - pixelLength*(col-1);
             var y = pixelLength*(row-1) + .5*(pixelLength-colorLength);
-            var hue = value / 256;
+            var hue = value / decibelRange;
             hue = (.9-hue) * 360;
             if (hue % 360 > 250) hue = hue - (hue-250)/4;
 
@@ -338,11 +359,11 @@ function drawSquares(analyser) {
 function drawSpirals(analyser) {
     var myCanvas = $('#iv-canvas').get(0);
     var drawContext = myCanvas.getContext('2d');
-    var freqDomain = new Uint8Array(analyser.frequencyBinCount);
+    var freqDomain = new Float32Array(analyser.frequencyBinCount);
 
     drawContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-    analyser.getByteFrequencyData(freqDomain);
-
+    analyser.getFloatFrequencyData(freqDomain);
+    
     var maxFreq = 900;
     var maxRadius = .475*Math.min(myCanvas.height, myCanvas.width);
     var numRings = 20;
@@ -352,14 +373,17 @@ function drawSpirals(analyser) {
         var value = 0;
         for (var i = 0; i < samplesPer; i++) {
             value += freqDomain[samplesPer*ring + i];
+            value -= analyser.minDecibels;
+            value -= weight(frequencyPerBin * (samplesPer*ring + i));
         }
         value /= samplesPer;
+        value = nonNegative(value);
 
         var radius = maxRadius;
-        var percentAround = value / 255;
+        var percentAround = value / decibelRange;
         percentAround *= 2.5; //percentAround = Math.sqrt(percentAround);
 
-        var hue = value / 255;
+        var hue = value / decibelRange;
         hue = Math.sqrt(.875-hue);
         hue = hue * 360;
 
@@ -381,11 +405,11 @@ function drawSpirals(analyser) {
 function drawInvertedSpirals(analyser) {
     var myCanvas = $('#iv-canvas').get(0);
     var drawContext = myCanvas.getContext('2d');
-    var freqDomain = new Uint8Array(analyser.frequencyBinCount);
+    var freqDomain = new Float32Array(analyser.frequencyBinCount);
 
     drawContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-    analyser.getByteFrequencyData(freqDomain);
-
+    analyser.getFloatFrequencyData(freqDomain);
+    
     var maxFreq = 900;
     var maxRadius = .475*Math.min(myCanvas.height, myCanvas.width);
     var numRings = 20;
@@ -395,15 +419,18 @@ function drawInvertedSpirals(analyser) {
         var value = 0;
         for (var i = 0; i < samplesPer; i++) {
             value += freqDomain[samplesPer*(numRings-ring) + i];
+            value -= analyser.minDecibels;
+            value -= weight(frequencyPerBin * (samplesPer*(numRings-ring) + i));
         }
         value /= samplesPer;
+        value = nonNegative(value);
 
         var radius = maxRadius;
-        var percentAround = value / 255;
+        var percentAround = value / decibelRange;
         percentAround *= 2.5; //percentAround = Math.sqrt(percentAround);
         //if (percentAround < .05) percentAround = Math.random() / 100;
 
-        var hue = value / 255;
+        var hue = value / decibelRange;
         hue = Math.sqrt(.875-hue);
         hue = hue * 360;
 
@@ -427,10 +454,11 @@ function drawInvertedSpirals(analyser) {
 function drawSpins(analyser, r) {
     var myCanvas = $('#iv-canvas').get(0);
     var drawContext = myCanvas.getContext('2d');
-    var freqDomain = new Uint8Array(analyser.frequencyBinCount);
+    var freqDomain = new Float32Array(analyser.frequencyBinCount);
 
     drawContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-    analyser.getByteFrequencyData(freqDomain);
+    analyser.getFloatFrequencyData(freqDomain);
+    
     r += Math.PI * .005;
     
     var rotation = r;
@@ -443,11 +471,14 @@ function drawSpins(analyser, r) {
         var value = 0;
         for (var i = 0; i < samplesPer; i++) {
             value += freqDomain[samplesPer*(ring) + i];
+            value -= analyser.minDecibels;
+            value -= weight(frequencyPerBin * (samplesPer*(ring) + i));
         }
         value /= samplesPer;
+        value = nonNegative(value);
 
         var radius = maxRadius;
-        var percentAround = value / 255;
+        var percentAround = value / decibelRange;
         percentAround *= 2.5;
         rotation += .5*ring;
 
