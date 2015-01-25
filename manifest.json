@@ -8,13 +8,13 @@
 	"content_scripts": [ {
 		"matches": [ "*://play.google.com/music/*", "*://www.youtube.com/watch*" ],
 		"run_at": "document_end",
-		"js": [ "/js/jquery.min.js", "/js/visualizer.js" ]
+		"js": [ "js/jquery.min.js", "js/visualizer.js", "js/gpm-inject.js" ]
 	} ],
 	
 	"icons": {
-      "128": "/images/icon128.png",
-      "16": "/images/icon16.png",
-      "48": "/images/icon48.png"
+      "128": "images/icon128.png",
+      "16": "images/icon16.png",
+      "48": "images/icon48.png"
    },
    
    "web_accessible_resources": [

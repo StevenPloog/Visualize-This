@@ -1,18 +1,17 @@
 var visualizer = new Visualizer();
 gpmInject();
 
-
 /***************************************************/
 /*     Functions to inject javascript for GPM      */
 /***************************************************/
-gpmInject: function() {
+function gpmInject() {
         injectStyle();
         injectCanvas();
         injectButton();
 }
 
 //Inject CSS for visualizers
-injectStyle: function() {
+function injectStyle() {
     var style = null;
         style = $('<link>', {
         rel: 'stylesheet',
@@ -24,7 +23,7 @@ injectStyle: function() {
 }
 
 //Creates the canvas and the container divs
-injectCanvas: function() {
+function injectCanvas() {
     var main = $('<div />', {
         id: 'iv-main-div',
         class: 'iv-main-div'
@@ -37,7 +36,7 @@ injectCanvas: function() {
     main.on('click', function() {
         $('#iv-main-div').fadeOut();
         $('#player').removeClass('visualize');
-        iVisual.endDrawLoop();
+        visualizer.endDrawLoop();
     });
 
     $('body').append(main);
@@ -45,11 +44,10 @@ injectCanvas: function() {
 }
 
 //Add the start button to the page
-injectButton: function () {
+function injectButton() {
     var button = $('<button />', {
         id: 'iv-button-toggle',
-        class: 'button small vertical-align gpm-iv-button',
-        //style: 'background: url('+chrome.extension.getURL('images/icon16.png')+') no-repeat center'
+        class: 'button small vertical-align gpm-iv-button'
     }).append('<span>Visualize</span>');
 
     button.on('click', function(e) {
@@ -98,9 +96,9 @@ injectButton: function () {
                 canvas.style.width=$('#iv-main-div').width() + "px";
                 canvas.style.height=$('#iv-main-div').height() + "px";
 
-                iVisual.visualType = $(this).attr('id');
-                iVisual.getAnalyzer();
-                iVisual.startDrawLoop();
+                visualizer.visualType = $(this).attr('id');
+                visualizer.getAnalyzer('audio');
+                visualizer.startDrawLoop();
             });
 
             //Hide the menu when a click occurs outside of it
