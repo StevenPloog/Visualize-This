@@ -1,15 +1,19 @@
+var sampleRate = 0;
+var frequencyPerBin = 0;
+
 Visualizer = (function(){
     
     function Visualizer() {
+        //AudioNode elements
         this.ctx        = undefined;
         this.source     = undefined;
         this.analyser   = undefined;
-        this.sampleRate = undefined;
-        this.frequencyPerBin = undefined;
         
+        //Visualization and canvas
         this.visualType = '';
         this.drawing    = undefined;
 
+        //Variables to persist through frames for individual visualizer styles
         this.rotation   = 0;
     }
 
@@ -25,8 +29,8 @@ Visualizer = (function(){
                 this.source.connect(this.analyser);
                 this.analyser.connect(this.ctx.destination);
                 
-                this.sampleRate = this.ctx.sampleRate;
-                this.frequencyPerBin = this.sampleRate / this.analyser.fftSize;
+                sampleRate = this.ctx.sampleRate;
+                frequencyPerBin = sampleRate / this.analyser.fftSize;
             }
         },
     
@@ -85,6 +89,12 @@ Visualizer = (function(){
     return Visualizer;
 })();
 
+//The standard weighting function to apply
+function weight(f) {
+    return aWeight(f);
+}
+
+//Weighting according to Wikipedia - http://en.wikipedia.org/wiki/A-weighting
 function aWeight(f) {
     var r = Math.pow(f, 4) * 148840000;
     r = r / (f*f + 424.36);
@@ -94,6 +104,7 @@ function aWeight(f) {
     return 2.0 + 20*Math.log10(r);
 }
 
+//Weighting according to Wikipedia - http://en.wikipedia.org/wiki/A-weighting
 function bWeight(f) {
     var r = Math.pow(f, 3) * 148840000;
     r = r / (f*f + 424.36);
@@ -103,6 +114,7 @@ function bWeight(f) {
     return .17 + 20*Math.log10(r);
 }
 
+//Weighting according to Wikipedia - http://en.wikipedia.org/wiki/A-weighting
 function cWeight(f) {
     
     var r = f*f * 148840000;
@@ -112,6 +124,7 @@ function cWeight(f) {
     return .06 + 20*Math.log10(r);
 }
 
+//Weighting according to Wikipedia - http://en.wikipedia.org/wiki/A-weighting
 function dWeight(f) {
     var h = Math.pow(1037918.48 - f*f, 2);
     h = h + 1080768.16 * f*f;
@@ -129,37 +142,29 @@ function drawSpectrum(analyser, reverse) {
     var myCanvas = $('#iv-canvas').get(0);
     var drawContext = myCanvas.getContext('2d');
     var freqDomain = new Float32Array(analyser.frequencyBinCount);
-    //var freqDomain = new Uint8Array(analyser.frequencyBinCount);
 
     drawContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
     analyser.getFloatFrequencyData(freqDomain);
-    //analyser.getByteFrequencyData(freqDomain);
 
-    var frequencyPerBin = 44100 / analyser.fftSize;
-    var maxFreq = 1000;
+    var maxFreq = 790;
     var slicesPerBar = 10;
     for (var i = 0; i < maxFreq; i += slicesPerBar) {
         var value = 0;
 
         for (var x = 0; x < slicesPerBar; x++) {
             value += (freqDomain[i+x] - analyser.minDecibels);
-            var c = cWeight(frequencyPerBin * (i+x) ,freqDomain[i+x] - analyser.minDecibels);
-            value -= c;
+            value -= weight(frequencyPerBin * (i+x));
         }
         value /= slicesPerBar;
 
         var percent = value / (analyser.maxDecibels - analyser.minDecibels);
         var height = myCanvas.height * percent;
-        //var height = myCanvas.height/maxFreq;
         var offset = myCanvas.height - height - 1;
         var barWidth =  myCanvas.width/maxFreq;
-        //var barWidth = myCanvas.width;
         var hue = i/maxFreq * 360;
-        //var hue = value / 256;
-        //hue = (.9-hue) * 360;
+        
         drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
         drawContext.fillRect(i * barWidth, offset, slicesPerBar*barWidth, height);
-        //drawContext.fillRect(0, i*height, barWidth, height*slicesPerBar);
         if (reverse) drawContext.fillRect(myCanvas.width-i*barWidth, offset, slicesPerBar*barWidth, height);
     }
 }
