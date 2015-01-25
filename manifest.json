@@ -5,11 +5,19 @@
 	"description": "HTML5 Audio Visualizer",
 	"version": "1.0",
 	
-	"content_scripts": [ {
-		"matches": [ "*://play.google.com/music/*", "*://www.youtube.com/watch*" ],
-		"run_at": "document_end",
-		"js": [ "js/jquery.min.js", "js/visualizer.js", "js/gpm-inject.js" ]
-	} ],
+	"content_scripts": [
+	    {
+            "matches": [ "*://play.google.com/music/*" ],
+            "run_at": "document_end",
+            "js": [ "js/jquery.min.js", "js/visualizer.js", "js/gpm-inject.js" ]
+	    },
+	    
+	    {
+	        "matches": [ "*://www.youtube.com/watch*" ],
+            "run_at": "document_end",
+            "js": [ "js/jquery.min.js", "js/visualizer.js", "js/yt-inject.js" ]
+	    }
+	],
 	
 	"icons": {
       "128": "images/icon128.png",
