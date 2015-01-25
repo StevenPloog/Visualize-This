@@ -4,11 +4,13 @@ Visualizer = (function(){
         this.ctx        = undefined;
         this.source     = undefined;
         this.analyser   = undefined;
-
+        this.sampleRate = undefined;
+        this.frequencyPerBin = undefined;
+        
         this.visualType = '';
         this.drawing    = undefined;
 
-        this.rotation   = 0;    
+        this.rotation   = 0;
     }
 
     Visualizer.prototype = {
@@ -22,6 +24,9 @@ Visualizer = (function(){
 
                 this.source.connect(this.analyser);
                 this.analyser.connect(this.ctx.destination);
+                
+                this.sampleRate = this.ctx.sampleRate;
+                this.frequencyPerBin = this.sampleRate / this.analyser.fftSize;
             }
         },
     
@@ -80,26 +85,70 @@ Visualizer = (function(){
     return Visualizer;
 })();
 
+function aWeight(f) {
+    var r = Math.pow(f, 4) * 148840000;
+    r = r / (f*f + 424.36);
+    r = r / (f*f + 148840000);
+    r = r / Math.sqrt( (f*f + 11599.29)*(f*f + 544496.41) );
+    
+    return 2.0 + 20*Math.log10(r);
+}
+
+function bWeight(f) {
+    var r = Math.pow(f, 3) * 148840000;
+    r = r / (f*f + 424.36);
+    r = r / (f*f + 148840000);
+    r = r / Math.sqrt(f*f + 25122.25);
+    
+    return .17 + 20*Math.log10(r);
+}
+
+function cWeight(f) {
+    
+    var r = f*f * 148840000;
+    r = r / (f*f + 424.36);
+    r = r / (f*f + 148840000);
+    
+    return .06 + 20*Math.log10(r);
+}
+
+function dWeight(f) {
+    var h = Math.pow(1037918.48 - f*f, 2);
+    h = h + 1080768.16 * f*f;
+    h = h / (Math.pow(9837328 - f*f, 2) + 11723776 * f*f);
+    h = h / (f*f + 79919.29);
+    h = h / (f*f + 1345600);
+    
+    var r = f / .000068966888496476;
+    r = r * Math.sqrt(h);
+    
+    return 20 * Math.log10(r);
+}
 
 function drawSpectrum(analyser, reverse) {
     var myCanvas = $('#iv-canvas').get(0);
     var drawContext = myCanvas.getContext('2d');
-    var freqDomain = new Uint8Array(analyser.frequencyBinCount);
+    var freqDomain = new Float32Array(analyser.frequencyBinCount);
+    //var freqDomain = new Uint8Array(analyser.frequencyBinCount);
 
     drawContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-    analyser.getByteFrequencyData(freqDomain);
+    analyser.getFloatFrequencyData(freqDomain);
+    //analyser.getByteFrequencyData(freqDomain);
 
+    var frequencyPerBin = 44100 / analyser.fftSize;
     var maxFreq = 1000;
     var slicesPerBar = 10;
     for (var i = 0; i < maxFreq; i += slicesPerBar) {
         var value = 0;
 
         for (var x = 0; x < slicesPerBar; x++) {
-            value += freqDomain[i+x];
+            value += (freqDomain[i+x] - analyser.minDecibels);
+            var c = cWeight(frequencyPerBin * (i+x) ,freqDomain[i+x] - analyser.minDecibels);
+            value -= c;
         }
         value /= slicesPerBar;
 
-        var percent = value / 256;
+        var percent = value / (analyser.maxDecibels - analyser.minDecibels);
         var height = myCanvas.height * percent;
         //var height = myCanvas.height/maxFreq;
         var offset = myCanvas.height - height - 1;
