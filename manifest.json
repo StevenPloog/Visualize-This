@@ -1,8 +1,8 @@
 {
 	"manifest_version": 2,
 	
-	"name": "IVisual",
-	"description": "Add a better visualizer to Google Play Music",
+	"name": "Visualize This",
+	"description": "HTML5 Audio Visualizer",
 	"version": "1.0",
 	
 	"content_scripts": [ {
@@ -17,8 +17,7 @@
       "48": "/images/icon48.png"
    },
    
-   "web_accessible_resources": [ 
-		"js/visualizer.js",
+   "web_accessible_resources": [
 		"css/*.css",
 		"images/*.png",
 		"html/*.html"
