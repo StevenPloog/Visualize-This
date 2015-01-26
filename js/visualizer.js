@@ -191,7 +191,7 @@ function drawMiddleSpectrum(analyser) {
     analyser.getFloatFrequencyData(freqDomain);
 
     var maxFreq = 725;
-    var slicesPerBar = 3;
+    var slicesPerBar = 1;
     for (var i = 0; i < maxFreq; i += slicesPerBar) {
         var value = 0;
 
@@ -211,8 +211,8 @@ function drawMiddleSpectrum(analyser) {
         var barWidth =  myCanvas.width/maxFreq;
         //var barWidth = myCanvas.width;
         var hue = i/maxFreq * 360;
-        hue = 250;
-        var luminance = 100 * i / maxFreq;
+        hue = 210;
+        var luminance = 60 * i / maxFreq;
         luminance = 100-luminance;
         //var hue = value / 256;
         //hue = (.9-hue) * 360;
