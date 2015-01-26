@@ -191,7 +191,7 @@ function drawMiddleSpectrum(analyser) {
     analyser.getFloatFrequencyData(freqDomain);
 
     var maxFreq = 725;
-    var slicesPerBar = 5;
+    var slicesPerBar = 3;
     for (var i = 0; i < maxFreq; i += slicesPerBar) {
         var value = 0;
 
@@ -211,11 +211,14 @@ function drawMiddleSpectrum(analyser) {
         var barWidth =  myCanvas.width/maxFreq;
         //var barWidth = myCanvas.width;
         var hue = i/maxFreq * 360;
+        hue = 250;
+        var luminance = 100 * i / maxFreq;
+        luminance = 100-luminance;
         //var hue = value / 256;
         //hue = (.9-hue) * 360;
-        drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
-        drawContext.fillRect(i * barWidth, myCanvas.height/2, slicesPerBar*barWidth, height);
-        drawContext.fillRect(i * barWidth, -height+myCanvas.height/2, slicesPerBar*barWidth, height);
+        drawContext.fillStyle = 'hsl(' + hue + ', ' + luminance + '%, 50%)';
+        drawContext.fillRect(i * barWidth, -1+myCanvas.height/2, 1+slicesPerBar*barWidth, height);
+        drawContext.fillRect(i * barWidth, -height+myCanvas.height/2, 1+slicesPerBar*barWidth, height);
         //drawContext.fillRect(myCanvas.width-i*barWidth, myCanvas.height/2, slicesPerBar*barWidth, height);
         //drawContext.fillRect(myCanvas.width-i*barWidth, -height+myCanvas.height/2, slicesPerBar*barWidth, height);
     }
