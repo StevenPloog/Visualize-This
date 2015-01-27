@@ -1,4 +1,4 @@
-function specturm(analyser, reverse) {
+function drawSpectrum(analyser,reverse) {
     var myCanvas = $('#iv-canvas').get(0);
     var drawContext = myCanvas.getContext('2d');
     var freqDomain = new Float32Array(analyser.frequencyBinCount);

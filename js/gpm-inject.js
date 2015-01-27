@@ -28,10 +28,12 @@ function injectCanvas() {
         id: 'iv-main-div',
         class: 'iv-main-div'
     });
+    
+    main.html('<canvas id="iv-canvas" style="background-color:black;"></canvas>');
 
-    $.get(chrome.extension.getURL('html/iv-main.html'), function(htmls) {
-        main.html(htmls);
-    });
+    //$.get(chrome.extension.getURL('html/iv-main.html'), function(htmls) {
+      //  main.html('<canvas id="iv-canvas" style="background-color:black;"></canvas>');
+    //});
 
     main.on('click', function() {
         $('#iv-main-div').fadeOut();
@@ -51,17 +53,17 @@ function injectButton() {
     }).append('<span>Visualize</span>');
 
     button.on('click', function(e) {
-        if ($('#iv-menu-dropdown').length) {
-            $('#iv-menu-dropdown').css('display', '');
+        if ($('#vt-menu-dropdown').length) {
+            $('#vt-menu-dropdown').css('display', '');
         } else {
             var menu = $('<div />', {
-                id: 'iv-menu-dropdown',
+                id: 'vt-menu-dropdown',
                 class: 'goog-menu goog-menu-vertical extra-links-menu',
                 role: 'menu'
             });
 
             //Load menu html
-            $.get(chrome.extension.getURL('html/iv-menu-dropdown.html'), function(htmls) {
+            $.get(chrome.extension.getURL('html/gpm-menu-dropdown.html'), function(htmls) {
                 menu.html(htmls);
             });
 
@@ -102,7 +104,7 @@ function injectButton() {
             });
 
             //Hide the menu when a click occurs outside of it
-            $('body').click(function(e) { $('#iv-menu-dropdown').css('display', 'none'); });
+            $('body').click(function(e) { $('#vt-menu-dropdown').css('display', 'none'); });
 
             $('body').append(menu);
         }

@@ -1,3 +1,5 @@
+//~drawCircles2
+
 function drawCircles2(analyser) {
     var myCanvas = $('#iv-canvas').get(0);
     var drawContext = myCanvas.getContext('2d');

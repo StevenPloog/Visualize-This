@@ -8,7 +8,7 @@ function drawSpins(analyser) {
     drawContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
     analyser.getFloatFrequencyData(freqDomain);
     
-    rotation += Math.PI * .005;
+    rotation += Math.PI * .0005;
     
     var maxFreq = 800;
     var maxRadius = .475*Math.min(myCanvas.height, myCanvas.width);
@@ -28,7 +28,7 @@ function drawSpins(analyser) {
         var radius = maxRadius;
         var percentAround = value / decibelRange;
         percentAround *= 2.5;
-        rotation += .5*ring;
+        //rotation += .5*ring;
 
         var hue = value / 255;
         hue = Math.sqrt(.75-hue);
