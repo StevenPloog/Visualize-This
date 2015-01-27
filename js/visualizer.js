@@ -53,7 +53,7 @@ Visualizer = (function(){
 
         //Clears canvas then draws to it
         drawLoop: function() {
-
+            /*
             switch (this.visualType) {
                 case 'spectrum':
                     drawSpectrum(this.analyser);
@@ -84,6 +84,9 @@ Visualizer = (function(){
                     break;
                 default: break;
             }
+            */
+            
+            if (this.visualType != '') window['this.visualType'](this.analyser);
             this.drawing = window.requestAnimationFrame(this.drawLoop.bind(this), $('#iv-canvas'));
         }
     };

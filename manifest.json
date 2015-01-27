@@ -1,33 +1,37 @@
 {
-	"manifest_version": 2,
-	
-	"name": "Visualize This",
-	"description": "HTML5 Audio Visualizer",
-	"version": "1.0",
-	
-	"content_scripts": [
-	    {
+    "manifest_version": 2,
+
+    "name": "Visualize This",
+    "description": "HTML5 Audio Visualizer",
+    "version": "1.0",
+
+    "permissions": [
+        "tabs"
+    ],
+    
+    "icons": {
+        "128": "images/icon128.png",
+        "16": "images/icon16.png",
+        "48": "images/icon48.png"
+    },
+
+    "content_scripts": [
+        {
             "matches": [ "*://play.google.com/music/*" ],
             "run_at": "document_end",
-            "js": [ "js/jquery.min.js", "js/visualizer.js", "js/gpm-inject.js" ]
-	    },
-	    
-	    {
-	        "matches": [ "*://www.youtube.com/watch*" ],
+            "js": [ "js/jquery.min.js", "js/visualizers-combined.js", "js/visualizer.js", "js/gpm-inject.js" ]
+        },
+
+        {
+            "matches": [ "*://www.youtube.com/watch*" ],
             "run_at": "document_end",
             "js": [ "js/jquery.min.js", "js/visualizer.js", "js/yt-inject.js" ]
-	    }
-	],
+        }
+    ],
 	
-	"icons": {
-      "128": "images/icon128.png",
-      "16": "images/icon16.png",
-      "48": "images/icon48.png"
-   },
-   
-   "web_accessible_resources": [
-		"css/*.css",
-		"images/*.png",
-		"html/*.html"
-	]
+	"web_accessible_resources": [
+        "css/*.css",
+        "images/*.png",
+        "html/*.html"
+    ]
 }
