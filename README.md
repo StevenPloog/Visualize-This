@@ -7,5 +7,5 @@ There should be one visualizer per file.
 build.sh should be run from the root of the extension after adding a new js/visualizers/*.js to rebuild the full-visualizer.js file. build.sh also rebuilds the html files required for the GPM and YouTube menus to work.
 
 Currently it will run on
-  Google Play Musics' listen page via a 'Visualize' button next to settings: https://play.google.com/music/listen
-  YouTube videos via a button with three bars next to the settings button: https://www.youtube.com
+-Google Play Musics' listen page via a 'Visualize' button next to settings: https://play.google.com/music/listen
+-YouTube videos via a button with three bars next to the settings button: https://www.youtube.com
