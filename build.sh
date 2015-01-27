@@ -23,7 +23,7 @@ do
     
     #YoutTube string
     yt_html=$yt_html"<li>\n"
-    yt_html=$yt_html"\t<span id=\""trim"\" class=\"yt-uix-button-menu-item\">"${trim/-/ }"</span>\n"
+    yt_html=$yt_html"\t<span id=\""$trim"\" class=\"yt-uix-button-menu-item\">"${trim/-/ }"</span>\n"
     yt_html=$yt_html"</li>\n\n"
 done
 

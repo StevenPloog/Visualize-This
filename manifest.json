@@ -25,7 +25,7 @@
         {
             "matches": [ "*://www.youtube.com/watch*" ],
             "run_at": "document_end",
-            "js": [ "js/jquery.min.js", "js/visualizer.js", "js/yt-inject.js" ]
+            "js": [ "js/jquery.min.js", "js/full-visualizer.js", "js/yt-inject.js" ]
         }
     ],
 	
