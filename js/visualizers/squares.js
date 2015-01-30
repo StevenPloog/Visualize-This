@@ -20,14 +20,14 @@ function drawSquares(analyser) {
                 index += i + samplesPer*row*numCols;
                 value += freqDomain[index];
                 value -= analyser.minDecibels;
-                value -= weight(frequencyPerBin * index);
+                value -= weight(Visualizer.frequencyPerBin * index);
             }
             value = value/samplesPer;
             value = nonNegative(value);
 
             var x = .5*myCanvas.width - colorLength*.5 - pixelLength*(col-1);
             var y = pixelLength*(row-1) + .5*(pixelLength-colorLength);
-            var hue = value / decibelRange;
+            var hue = value / Visualizer.decibelRange;
             hue = (.9-hue) * 360;
             if (hue % 360 > 250) hue = hue - (hue-250)/4;
 

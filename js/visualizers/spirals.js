@@ -16,16 +16,16 @@ function drawSpirals(analyser) {
         for (var i = 0; i < samplesPer; i++) {
             value += freqDomain[samplesPer*ring + i];
             value -= analyser.minDecibels;
-            value -= weight(frequencyPerBin * (samplesPer*ring + i));
+            value -= weight(Visualizer.frequencyPerBin * (samplesPer*ring + i));
         }
         value /= samplesPer;
         value = nonNegative(value);
 
         var radius = maxRadius;
-        var percentAround = value / decibelRange;
+        var percentAround = value / Visualizer.decibelRange;
         percentAround *= 2.5; //percentAround = Math.sqrt(percentAround);
 
-        var hue = value / decibelRange;
+        var hue = value / Visualizer.decibelRange;
         hue = Math.sqrt(.875-hue);
         hue = hue * 360;
 

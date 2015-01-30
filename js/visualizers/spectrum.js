@@ -1,4 +1,4 @@
-function drawSpectrum(analyser,reverse) {
+var drawSpectrum = function (analyser,reverse) {
     var myCanvas = $('#iv-canvas').get(0);
     var drawContext = myCanvas.getContext('2d');
     var freqDomain = new Float32Array(analyser.frequencyBinCount);
@@ -14,12 +14,12 @@ function drawSpectrum(analyser,reverse) {
         for (var x = 0; x < slicesPerBar; x++) {
             value += freqDomain[i+x];
             value -= analyser.minDecibels;
-            value -= weight(frequencyPerBin * (i+x));
+            value -= weight(Visualizer.frequencyPerBin * (i+x));
         }
         value /= slicesPerBar;
         value = nonNegative(value);
 
-        var percent = value / decibelRange;
+        var percent = value / Visualizer.decibelRange;
         var height = myCanvas.height * percent;
         var offset = myCanvas.height - height - 1;
         var barWidth =  myCanvas.width/maxFreq;

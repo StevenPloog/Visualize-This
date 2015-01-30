@@ -8,13 +8,13 @@ for f in *.js
 do
     trim=${f%.*} #Remove extension
     
-    functionLine=$(grep $f -e 'function ')
+    functionLine=$(grep $f -e 'function')
     functionCall=($functionLine)
     
     #visualizer.js case string
-    cases=$cases"\t\t\t\tcase '"$trim"':\n" #Name of file without extension
-    cases=$cases"\t\t\t\t\t"${functionCall[1]}";\n"
-    cases=$cases"\t\t\t\t\tbreak;\n"
+    cases=$cases"\t\t\tcase '"$trim"': \n" #Name of file without extension
+    cases=$cases"\t\t\t\t"${functionCall[1]}${functionCall[4]}"; \n"
+    cases=$cases"\t\t\t\tbreak; \n"
     
     #GPM string
     gpm_html=$gpm_html"<div id=\""$trim"\" class=\"goog-menuitem\" role=\"menuitem\" style=\"-webkit-user-select: none;\">\n"
@@ -28,7 +28,7 @@ do
 done
 
 cd ../
-awk -v cases="$cases" '/switch \(this.visualType\)/{print $0 RS cases RS;next}1' visualizer.js > full-visualizer.js
+awk -v cases="$cases" '/switch \(Visualizer.visualType\)/{print $0 RS cases RS;next}1' visualizer.js > full-visualizer.js
 #cat visualizer.js > full-visualizer.js
 cat visualizers/*.js >> full-visualizer.js
 

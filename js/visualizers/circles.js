@@ -21,17 +21,17 @@ function drawCircles(analyser) {
             for (var i = 0; i < samplesPerCircle; i++) {
                 value += freqDomain[samplesPerCircle*(row * col) + i];
                 value -= analyser.minDecibels;
-                value -= weight(frequencyPerBin * (samplesPerCircle*(row * col) + i));
+                value -= weight(Visualizer.frequencyPerBin * (samplesPerCircle*(row * col) + i));
             }
             value = value/samplesPerCircle;
             value = nonNegative(value);
 
             //Radius is max*percent of max
-            var radius = maxRadius * value / decibelRange;
+            var radius = maxRadius * value / Visualizer.decibelRange;
             var x = 4*maxRadius + maxRadius*2*(col-1) + .5*myCanvas.width - maxRadius*numCols*2;
             var y = 3*maxRadius + maxRadius*2*(row-1);
             //var hue = samplesPerCircle*(row * col) / maxFreq * 360;
-            var hue = value / decibelRange;
+            var hue = value / Visualizer.decibelRange;
             hue = (.9-hue) * 360;
 
             drawContext.beginPath();

@@ -1,6 +1,6 @@
 //~drawCircles2
 
-function drawCircles2(analyser) {
+Visualizer.drawCircles2 = function(analyser) {
     var myCanvas = $('#iv-canvas').get(0);
     var drawContext = myCanvas.getContext('2d');
     var freqDomain = new Float32Array(analyser.frequencyBinCount);
@@ -21,13 +21,13 @@ function drawCircles2(analyser) {
                 index += i + samplesPerCircle*row*numCols;
                 value += freqDomain[index];
                 value -= analyser.minDecibels;
-                value -= weight(frequencyPerBin * index);
+                value -= weight(Visualizer.frequencyPerBin * index);
             }
             value = value/samplesPerCircle;
             value = nonNegative(value);
 
             //Radius is max*percent of max
-            var radius = maxRadius * value / decibelRange;
+            var radius = maxRadius * value / Visualizer.decibelRange;
             var x = maxRadius*2*(col-1)+ .5*myCanvas.width;// - maxRadius*numCols*2;
             var y = maxRadius + maxRadius*2*(row-1);
             //var hue = (samplesPerCircle*col + samplesPerCircle*row*numCols) / maxFreq * 360;
@@ -45,4 +45,4 @@ function drawCircles2(analyser) {
             drawContext.fill();
        }
     }
-}
+};

@@ -14,12 +14,12 @@ function drawMiddleSpectrum(analyser) {
         for (var x = 0; x < slicesPerBar; x++) {
             value += freqDomain[i+x];
             value -= analyser.minDecibels;
-            value -= weight(frequencyPerBin * (i+x));
+            value -= weight(Visualizer.frequencyPerBin * (i+x));
         }
         value /= slicesPerBar;
         value = nonNegative(value);
 
-        var percent = value / decibelRange;
+        var percent = value / Visualizer.decibelRange;
         var height = myCanvas.height * percent;
         height *= .5;
         //var height = myCanvas.height/maxFreq;

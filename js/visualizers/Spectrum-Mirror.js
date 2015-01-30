@@ -1,3 +1,3 @@
-function drawMirrorSpectrum(analyser) {
+var drawMirrorSpectrum = function (analyser) {
     drawSpectrum(analyser, true);
 }

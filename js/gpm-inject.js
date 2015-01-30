@@ -1,4 +1,5 @@
-var visualizer = new Visualizer();
+//var visualizer = new Visualizer();
+Visualizer.init();
 gpmInject();
 
 /***************************************************/
@@ -38,7 +39,7 @@ function injectCanvas() {
     main.on('click', function() {
         $('#iv-main-div').fadeOut();
         $('#player').removeClass('visualize');
-        visualizer.endDrawLoop();
+        Visualizer.endDrawLoop();
     });
 
     $('body').append(main);
@@ -98,9 +99,9 @@ function injectButton() {
                 canvas.style.width=$('#iv-main-div').width() + "px";
                 canvas.style.height=$('#iv-main-div').height() + "px";
 
-                visualizer.visualType = $(this).attr('id');
-                visualizer.getAnalyzer('audio');
-                visualizer.startDrawLoop();
+                Visualizer.visualType = $(this).attr('id');
+                Visualizer.getAnalyzer('audio');
+                Visualizer.startDrawLoop();
             });
 
             //Hide the menu when a click occurs outside of it
