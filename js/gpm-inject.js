@@ -8,6 +8,19 @@ function gpmInject() {
         injectStyle();
         injectCanvas();
         injectButton();
+        
+        /*$(window).resize(function() {
+            //Scale the canvas to achieve proper resolution
+            var canvas = $('#iv-canvas').get(0);
+            canvas.width=$('#iv-main-div').width()*window.devicePixelRatio;
+            canvas.height=$('#iv-main-div').height()*window.devicePixelRatio;
+            canvas.style.width=$('#iv-main-div').width() + "px";
+            canvas.style.height=$('#iv-main-div').height() + "px";
+            console.log("adjusted height");
+            //Visualizer.visualType = $(this).attr('id');
+            //Visualizer.getAnalyzer('audio');
+            //Visualizer.startDrawLoop();
+        });*/
 }
 
 //Inject CSS for visualizers
