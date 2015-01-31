@@ -9,18 +9,19 @@ function gpmInject() {
         injectCanvas();
         injectButton();
         
-        /*$(window).resize(function() {
+        $(window).resize(function() {
+            //$('#player').addClass('visualize');
+            $('#iv-main-div').fadeIn();
+            $('#iv-main-div').height($('#oneGoogleWrapper').height() + $('#nav-content-container').height());
+            $('#iv-canvas').height($('iv-main-div').height());
+            
             //Scale the canvas to achieve proper resolution
             var canvas = $('#iv-canvas').get(0);
             canvas.width=$('#iv-main-div').width()*window.devicePixelRatio;
             canvas.height=$('#iv-main-div').height()*window.devicePixelRatio;
             canvas.style.width=$('#iv-main-div').width() + "px";
             canvas.style.height=$('#iv-main-div').height() + "px";
-            console.log("adjusted height");
-            //Visualizer.visualType = $(this).attr('id');
-            //Visualizer.getAnalyzer('audio');
-            //Visualizer.startDrawLoop();
-        });*/
+        });
 }
 
 //Inject CSS for visualizers
@@ -43,10 +44,6 @@ function injectCanvas() {
     });
     
     main.html('<canvas id="iv-canvas" style="background-color:black;"></canvas>');
-
-    //$.get(chrome.extension.getURL('html/iv-main.html'), function(htmls) {
-      //  main.html('<canvas id="iv-canvas" style="background-color:black;"></canvas>');
-    //});
 
     main.on('click', function() {
         $('#iv-main-div').fadeOut();
