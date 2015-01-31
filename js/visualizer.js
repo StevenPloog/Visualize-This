@@ -358,7 +358,7 @@ var Visualizer = {
     
         var maxFreq = 900;
         var maxRadius = .475*Math.min(myCanvas.height, myCanvas.width);
-        var numRings = 20;
+        var numRings = 30;
         var samplesPer = maxFreq / numRings;
         var ringWidth = 5;//try negatives
         for (var ring = 0; ring < numRings; ring++) {
