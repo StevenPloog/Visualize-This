@@ -134,8 +134,11 @@ var Visualizer = {
         analyser.getFloatFrequencyData(freqDomain);
 
         var maxFreq = 725;
+        var minFreq = 20;
+        var numBars = maxFreq - minFreq;
+        var barWidth =  myCanvas.width/numBars;
         var slicesPerBar = 1;
-        for (var i = 0; i < maxFreq; i += slicesPerBar) {
+        for (var i = minFreq; i < maxFreq; i += slicesPerBar) {
             var value = 0;
 
             for (var x = 0; x < slicesPerBar; x++) {
@@ -151,7 +154,6 @@ var Visualizer = {
             height *= .5;
             //var height = myCanvas.height/maxFreq;
             var offset = myCanvas.height - height - 1;
-            var barWidth =  myCanvas.width/maxFreq;
             //var barWidth = myCanvas.width;
             var hue = i/maxFreq * 360;
             hue = 210;
@@ -160,8 +162,8 @@ var Visualizer = {
             //var hue = value / 256;
             //hue = (.9-hue) * 360;
             drawContext.fillStyle = 'hsl(' + hue + ', ' + luminance + '%, 50%)';
-            drawContext.fillRect(i * barWidth, -1+myCanvas.height/2, 1+slicesPerBar*barWidth, height);
-            drawContext.fillRect(i * barWidth, -height+myCanvas.height/2, 1+slicesPerBar*barWidth, height);
+            drawContext.fillRect((i-minFreq) * barWidth, -1+myCanvas.height/2, 1+slicesPerBar*barWidth, height);
+            drawContext.fillRect((i-minFreq) * barWidth, -height+myCanvas.height/2, 1+slicesPerBar*barWidth, height);
             //drawContext.fillRect(myCanvas.width-i*barWidth, myCanvas.height/2, slicesPerBar*barWidth, height);
             //drawContext.fillRect(myCanvas.width-i*barWidth, -height+myCanvas.height/2, slicesPerBar*barWidth, height);
         }
@@ -447,7 +449,7 @@ var Visualizer = {
 /****************************************/
 //The standard weighting function to apply
 function weight(f) {
-    return aWeight(f);
+    return bWeight(f);
 }
 
 //Weighting according to Wikipedia - http://en.wikipedia.org/wiki/A-weighting
