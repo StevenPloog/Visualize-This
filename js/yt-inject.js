@@ -8,6 +8,20 @@ function ytInject() {
     injectStyle();
     injectCanvas();
     injectButton();
+    
+    $(window).resize(function() {
+        $('#iv-main-div').height($('.html5-video-container').height());
+        $('#iv-main-div').width($('.html5-video-container').width());
+        $('#iv-canvas').height($('iv-main-div').height());
+        $('#iv-canvas').width($('iv-main-div').width());
+        
+        //Scale the canvas to achieve proper resolution        
+        var canvas = $('#iv-canvas').get(0);
+        canvas.width=$('#iv-main-div').width()*window.devicePixelRatio;
+        canvas.height=$('#iv-main-div').height()*window.devicePixelRatio;
+        canvas.style.width=$('#iv-main-div').width() + "px";
+        canvas.style.height=$('#iv-main-div').height() + "px";
+    });
 }
 
 function injectStyle() {
@@ -103,7 +117,12 @@ function injectButton() {
             $('body').click(function(e) { $('#vt-menu-dropdown').css('display', 'none'); });
 
             $('.html5-video-player').append(menu);
-            //$('body').append(menu);
+            
+            $('#vt-menu-dropdown').css({
+                position: 'absolute',
+                left: $('.html5-video-player').width() - 160,
+                bottom: '28px'
+            });
         }
         
         //Keep menu up if button is pressed again
