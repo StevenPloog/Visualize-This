@@ -1,4 +1,4 @@
-var visualizer = new Visualizer();
+Visualizer.init();
 ytInject();
 
 /****************************************************/
@@ -63,7 +63,7 @@ function injectButton() {
                 });
             } else {
                 $('#iv-main-div').fadeOut();
-                visualizer.endDrawLoop();
+                Visualizer.endDrawLoop();
             }
         } else {
             var menu = $('<ul />', {
@@ -91,9 +91,9 @@ function injectButton() {
                 canvas.style.width=$('#iv-main-div').width() + "px";
                 canvas.style.height=$('#iv-main-div').height() + "px";
 
-                visualizer.visualType = $(this).attr('id');
-                visualizer.getAnalyzer('video.video-stream');
-                visualizer.startDrawLoop();
+                Visualizer.visualType = $(this).attr('id');
+                Visualizer.getAnalyzer('video.video-stream');
+                Visualizer.startDrawLoop();
 
                 $('#vt-menu-dropdown').css('display', 'none');
                 e.stopPropagation();

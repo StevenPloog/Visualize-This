@@ -1,4 +1,3 @@
-//var visualizer = new Visualizer();
 Visualizer.init();
 gpmInject();
 
