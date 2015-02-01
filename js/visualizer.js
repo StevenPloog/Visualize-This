@@ -82,6 +82,12 @@ var Visualizer = {
 			case 'spirals-inverted':
 				Visualizer.drawInvertedSpirals(analyser);
 				break;
+			case 'rising-sun':
+				Visualizer.drawRisingSun(analyser);
+				break;
+			case 'risen-sun':
+				Visualizer.drawRisenSun(analyser);
+				break;
             default: break;
         }
     
@@ -135,9 +141,9 @@ var Visualizer = {
 
         var maxFreq = 725;
         var minFreq = 20;
-        var numBars = maxFreq - minFreq;
-        var barWidth =  myCanvas.width/numBars;
         var slicesPerBar = 1;
+        var numBars = (maxFreq - minFreq) / slicesPerBar;
+        var barWidth =  myCanvas.width/numBars;
         for (var i = minFreq; i < maxFreq; i += slicesPerBar) {
             var value = 0;
 
@@ -441,6 +447,127 @@ var Visualizer = {
             //drawContext.arc(myCanvas.width/2, myCanvas.height/2, innerRadius, 1.5*Math.PI*(1-.3*percentAround), 1.5*Math.PI*(1+.3*percentAround), false);
             drawContext.stroke();
         }
+    },
+    
+    drawRisingSun: function(analyser) {
+        var canvas = $('#iv-canvas').get(0);
+        var drawContext = canvas.getContext('2d');
+        var freqDomain = new Float32Array(analyser.frequencyBinCount);
+
+        drawContext.clearRect(0, 0, canvas.width, canvas.height);
+        analyser.getFloatFrequencyData(freqDomain);
+
+        var maxFreq = 725;
+        var minFreq = 20;
+        var slicesPerBar = 10;
+        var numBars = (maxFreq - minFreq) / slicesPerBar;
+        var barWidth =  10;
+        
+        var innerRadius = 100;
+        var outerRadius = .85 * Math.min(canvas.width/2, canvas.height);
+        
+        var minTheta = 0;
+        var maxTheta = Math.PI;
+        var thetaIncrement = (maxTheta - minTheta) / numBars;
+        var theta = maxTheta;
+        
+        for (var i = minFreq; i < maxFreq; i += slicesPerBar) {
+            
+            var value = 0;
+            for (var x = 0; x < slicesPerBar; x++) {
+                value += freqDomain[i+x];
+                value -= analyser.minDecibels;
+                value -= weight(Visualizer.frequencyPerBin * (i+x));
+            }
+            value /= slicesPerBar;
+            value = nonNegative(value);
+
+            var percent = value / Visualizer.decibelRange;
+            
+            var hue = i/maxFreq * 360;
+            hue = 210;
+            var luminance = 60 * i / maxFreq;
+            luminance = 100-luminance;
+            //var hue = value / 256;
+            //hue = (.9-hue) * 360;
+            
+            var innerX = innerRadius * Math.cos(theta) + (canvas.width/2);
+            var innerY = canvas.height - innerRadius * Math.sin(theta);
+            var outerX = percent * outerRadius * Math.cos(theta) + (canvas.width/2);
+            var outerY = canvas.height - percent * outerRadius * Math.sin(theta);
+            
+            drawContext.beginPath();
+            drawContext.lineWidth = barWidth;
+            drawContext.moveTo(innerX, innerY);
+            drawContext.lineTo(outerX, outerY);
+            drawContext.strokeStyle = 'hsl(' + hue + ', ' + luminance + '%, 50%)';
+            drawContext.stroke();
+            
+            theta -= thetaIncrement;
+        }
+    },
+    
+    drawRisenSun: function(analyser) {
+        var canvas = $('#iv-canvas').get(0);
+        var drawContext = canvas.getContext('2d');
+        var freqDomain = new Float32Array(analyser.frequencyBinCount);
+
+        drawContext.clearRect(0, 0, canvas.width, canvas.height);
+        analyser.getFloatFrequencyData(freqDomain);
+
+        var maxFreq = 725;
+        var minFreq = 100;
+        var slicesPerBar = 10;
+        var numBars = (maxFreq - minFreq) / slicesPerBar;
+        var barWidth =  10;
+        
+        var innerRadius = 100;
+        var outerRadius = .85 * Math.min(canvas.width/2, canvas.height/2);
+        
+        var minTheta = .015*Math.PI;;
+        var maxTheta = 2*Math.PI;
+        var thetaIncrement = (maxTheta - minTheta) / numBars;
+        var theta = maxTheta;
+        
+        for (var i = minFreq; i < maxFreq; i += slicesPerBar) {
+            
+            var value = 0;
+            for (var x = 0; x < slicesPerBar; x++) {
+                value += freqDomain[i+x];
+                value -= analyser.minDecibels;
+                value -= weight(Visualizer.frequencyPerBin * (i+x));
+            }
+            value /= slicesPerBar;
+            value = nonNegative(value);
+
+            var percent = value / Visualizer.decibelRange;
+            
+            //var hue = i/maxFreq * 360;
+            //hue = 210;
+            var luminance = 100;//60 * i / maxFreq;
+            //luminance = 100-luminance;
+            var hue = percent;
+            hue = (.9-hue) * 360;
+            
+            var innerX = innerRadius * Math.cos(theta) + (canvas.width/2);
+            var innerY = canvas.height/2 - innerRadius * Math.sin(theta);
+            var outerX = percent * outerRadius * Math.cos(theta) + (canvas.width/2);
+            var outerY = canvas.height/2 - percent * outerRadius * Math.sin(theta);
+            
+            drawContext.beginPath();
+            drawContext.lineWidth = barWidth;
+            drawContext.moveTo(innerX, innerY);
+            drawContext.lineTo(outerX, outerY);
+            drawContext.strokeStyle = 'hsl(' + hue + ', ' + luminance + '%, 50%)';
+            drawContext.stroke();
+            
+            theta -= thetaIncrement;
+        }
+        
+        drawContext.beginPath();
+        drawContext.arc(canvas.width/2, canvas.height/2, innerRadius, 0, 2*Math.PI, false);
+        drawContext.fillStyle = 'hsl(' + hue + ', 0%, 50%)';
+        drawContext.fill();
     }
 };
 
