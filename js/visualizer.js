@@ -522,7 +522,7 @@ var Visualizer = {
         var barWidth =  10;
         
         var innerRadius = 100;
-        var outerRadius = .85 * Math.min(canvas.width/2, canvas.height/2);
+        var outerRadius = .75 * Math.min(canvas.width, canvas.height);
         
         var minTheta = .015*Math.PI;;
         var maxTheta = 2*Math.PI;
@@ -565,8 +565,8 @@ var Visualizer = {
         }
         
         drawContext.beginPath();
-        drawContext.arc(canvas.width/2, canvas.height/2, innerRadius, 0, 2*Math.PI, false);
-        drawContext.fillStyle = 'hsl(' + hue + ', 0%, 50%)';
+        drawContext.arc(canvas.width/2, canvas.height/2, innerRadius+2, 0, 2*Math.PI, false);
+        drawContext.fillStyle = 'hsl(' + hue + ', 0%, 00%)';
         drawContext.fill();
     }
 };
