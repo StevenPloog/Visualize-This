@@ -507,7 +507,7 @@ var Visualizer = {
         }
     },
     
-    drawRisenSun: function(analyser) {
+drawRisenSun: function(analyser) {
         var canvas = $('#iv-canvas').get(0);
         var drawContext = canvas.getContext('2d');
         var freqDomain = new Float32Array(analyser.frequencyBinCount);
@@ -516,17 +516,17 @@ var Visualizer = {
         analyser.getFloatFrequencyData(freqDomain);
 
         var maxFreq = 725;
-        var minFreq = 100;
-        var slicesPerBar = 10;
+        var minFreq = 250;
+        var slicesPerBar = 1;
         var numBars = (maxFreq - minFreq) / slicesPerBar;
-        var barWidth =  10;
+        var barWidth =  5;
         
-        var innerRadius = 100;
+        var innerRadius = 50;
         var outerRadius = .75 * Math.min(canvas.width, canvas.height);
         
-        var minTheta = .015*Math.PI;;
+        var minTheta = 0;//.015*Math.PI;;
         var maxTheta = 2*Math.PI;
-        var thetaIncrement = (maxTheta - minTheta) / numBars;
+        var thetaIncrement = 5*(maxTheta - minTheta) / numBars;
         var theta = maxTheta;
         
         for (var i = minFreq; i < maxFreq; i += slicesPerBar) {
@@ -535,7 +535,7 @@ var Visualizer = {
             for (var x = 0; x < slicesPerBar; x++) {
                 value += freqDomain[i+x];
                 value -= analyser.minDecibels;
-                value -= weight(Visualizer.frequencyPerBin * (i+x));
+                //value -= weight(Visualizer.frequencyPerBin * (i+x));
             }
             value /= slicesPerBar;
             value = nonNegative(value);
