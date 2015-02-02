@@ -556,6 +556,7 @@ drawRisenSun: function(analyser) {
             
             drawContext.beginPath();
             drawContext.lineWidth = barWidth;
+            drawContext.lineCap = 'round';
             drawContext.moveTo(innerX, innerY);
             drawContext.lineTo(outerX, outerY);
             drawContext.strokeStyle = 'hsl(' + hue + ', ' + luminance + '%, 50%)';
