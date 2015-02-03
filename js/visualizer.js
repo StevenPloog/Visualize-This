@@ -461,13 +461,14 @@ var Visualizer = {
         var minFreq = 20;
         var slicesPerBar = 10;
         var numBars = (maxFreq - minFreq) / slicesPerBar;
-        var barWidth =  10;
+        var barWidth =  5;
         
-        var innerRadius = 100;
-        var outerRadius = .85 * Math.min(canvas.width/2, canvas.height);
-        
-        var minTheta = 0;
-        var maxTheta = Math.PI;
+        var outerRadius = 1 * Math.min(canvas.width/2, canvas.height);
+        var innerRadius = .25*outerRadius;
+        outerRadius -= innerRadius;
+
+        var minTheta = Math.PI/2;
+        var maxTheta = 1.05*Math.PI;
         var thetaIncrement = (maxTheta - minTheta) / numBars;
         var theta = maxTheta;
         
@@ -483,23 +484,28 @@ var Visualizer = {
             value = nonNegative(value);
 
             var percent = value / Visualizer.decibelRange;
-            
-            var hue = i/maxFreq * 360;
-            hue = 210;
+           
             var luminance = 60 * i / maxFreq;
-            luminance = 100-luminance;
-            //var hue = value / 256;
-            //hue = (.9-hue) * 360;
+            luminance = 100;//-luminance;
+            var hue = percent;
+            hue = (.75-hue) * 360;
             
-            var innerX = innerRadius * Math.cos(theta) + (canvas.width/2);
-            var innerY = canvas.height - innerRadius * Math.sin(theta);
-            var outerX = percent * outerRadius * Math.cos(theta) + (canvas.width/2);
-            var outerY = canvas.height - percent * outerRadius * Math.sin(theta);
+            var innerX = innerRadius * Math.cos(theta);// + (canvas.width/2);
+            var innerY = .65*canvas.height - innerRadius * Math.sin(theta);
+            var outerX = percent * outerRadius * Math.cos(theta) + innerRadius*(Math.cos(theta));// + (canvas.width/2);
+            var outerY = .65*canvas.height - innerRadius*(Math.sin(theta)) - percent * outerRadius * Math.sin(theta);
             
             drawContext.beginPath();
             drawContext.lineWidth = barWidth;
-            drawContext.moveTo(innerX, innerY);
-            drawContext.lineTo(outerX, outerY);
+            drawContext.moveTo(innerX + canvas.width/2, innerY);
+            drawContext.lineTo(outerX + canvas.width/2, outerY);
+            drawContext.strokeStyle = 'hsl(' + hue + ', ' + luminance + '%, 50%)';
+            drawContext.stroke();
+
+            drawContext.beginPath();
+            drawContext.lineWidth = barWidth;
+            drawContext.moveTo(Math.abs(innerX) + (canvas.width/2), innerY);
+            drawContext.lineTo(Math.abs(outerX) + canvas.width/2, outerY);
             drawContext.strokeStyle = 'hsl(' + hue + ', ' + luminance + '%, 50%)';
             drawContext.stroke();
             
@@ -507,7 +513,7 @@ var Visualizer = {
         }
     },
     
-    drawRisenSun: function(analyser) {
+     drawRisenSun: function(analyser) {
         var canvas = $('#iv-canvas').get(0);
         var drawContext = canvas.getContext('2d');
         var freqDomain = new Float32Array(analyser.frequencyBinCount);
@@ -516,17 +522,18 @@ var Visualizer = {
         analyser.getFloatFrequencyData(freqDomain);
 
         var maxFreq = 725;
-        var minFreq = 30;
+        var minFreq = 20;
         var slicesPerBar = 1;
         var numBars = (maxFreq - minFreq) / slicesPerBar;
-        var barWidth =  5;
+        var barWidth =  3;
         
-        var outerRadius = .6 * Math.min(canvas.width, canvas.height);
+        var outerRadius = 1 * Math.min(canvas.width/2, canvas.height/2);
         var innerRadius = .1*outerRadius;
+        outerRadius -= innerRadius;
         
         var minTheta = 0;//.015*Math.PI;;
         var maxTheta = 2*Math.PI;
-        var thetaIncrement = 15*(maxTheta - minTheta) / numBars;
+        var thetaIncrement = 10*(maxTheta - minTheta) / numBars;
         var theta = maxTheta;
         
         for (var i = minFreq; i < maxFreq; i += slicesPerBar) {
@@ -547,12 +554,12 @@ var Visualizer = {
             var luminance = 100;//60 * i / maxFreq;
             //luminance = 100-luminance;
             var hue = percent;
-            hue = (.7-hue) * 360;
+            hue = (hue) * 360;
             
             var innerX = innerRadius * Math.cos(theta) + (canvas.width/2);
             var innerY = canvas.height/2 - innerRadius * Math.sin(theta);
-            var outerX = percent * outerRadius * Math.cos(theta) + (canvas.width/2);
-            var outerY = canvas.height/2 - percent * outerRadius * Math.sin(theta);
+            var outerX = percent * outerRadius * Math.cos(theta) + innerRadius*(Math.cos(theta)) + (canvas.width/2);
+            var outerY = canvas.height/2 - innerRadius*(Math.sin(theta)) - percent * outerRadius * Math.sin(theta);
             
             drawContext.beginPath();
             drawContext.lineWidth = barWidth;
@@ -565,10 +572,10 @@ var Visualizer = {
             theta -= thetaIncrement;
         }
         
-        drawContext.beginPath();
-        drawContext.arc(canvas.width/2, canvas.height/2, innerRadius+2, 0, 2*Math.PI, false);
-        drawContext.fillStyle = 'hsl(' + hue + ', 0%, 00%)';
-        drawContext.fill();
+        //drawContext.beginPath();
+        //drawContext.arc(canvas.width/2, canvas.height/2, innerRadius+2, 0, 2*Math.PI, false);
+        //drawContext.fillStyle = 'hsl(' + hue + ', 0%, 00%)';
+        //drawContext.fill();
     }
 };
 
