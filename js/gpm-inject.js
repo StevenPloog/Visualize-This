@@ -11,7 +11,7 @@ function gpmInject() {
         
         $(window).resize(function() {
             //$('#player').addClass('visualize');
-            $('#iv-main-div').fadeIn();
+            //$('#iv-main-div').fadeIn();
             $('#iv-main-div').height($('#oneGoogleWrapper').height() + $('#nav-content-container').height());
             $('#iv-canvas').height($('iv-main-div').height());
             
