@@ -18,11 +18,6 @@ var Visualizer = {
         Visualizer.sampleRate = 0;
         Visualizer.frequencyPerBin = 0;
         Visualizer.decibelRange = 1;
-        
-        Visualizer.lights = [];
-        for (var i = 0; i < 50; i++) {
-            Visualizer.lights.push(new LightShowSource());
-        }
     },
     
     getAnalyzer: function(sourceTag) {
@@ -44,10 +39,13 @@ var Visualizer = {
     startDrawLoop: function() {
         if (!Visualizer.drawing) {
         
-            if (Visualizer.visualType == 'light-show')
+            if (Visualizer.visualType == 'light-show') {
+                Visualizer.createLightShowSources(50);
                 Visualizer.positionLightShow();
-            else if (Visualizer.visualType == 'big-light-show')
+            } else if (Visualizer.visualType == 'big-light-show') {
+                Visualizer.createLightShowSources(100);
                 Visualizer.positionBigLightShow();
+            }
         
             Visualizer.drawLoop();
         }
@@ -57,6 +55,7 @@ var Visualizer = {
         if (Visualizer.drawing) {
             window.cancelAnimationFrame(Visualizer.drawing);
             Visualizer.drawing = undefined;
+            Visualizer.destroyLightShowSources();
         }
     },
     
@@ -109,6 +108,17 @@ var Visualizer = {
         }
     
         Visualizer.drawing = window.requestAnimationFrame(Visualizer.drawLoop, $('#iv-canvas'));
+    },
+
+    createLightShowSources: function(numSources) {
+        Visualizer.lights = [];
+        for (var i = 0; i < numSources; i++) {
+            Visualizer.lights.push(new LightShowSource());
+        }
+    },
+
+    destroyLightShowSources: function() {
+        Visualizer.lights = undefined;
     },
     
     drawSpectrum: function(analyser,reverse) {
@@ -655,7 +665,7 @@ var Visualizer = {
 		}   
     },
 
-        //Positions lightshow elements for the light show
+    //Positions lightshow elements for the light show
     positionBigLightShow: function() {
         var canvas = $('#iv-canvas').get(0);
         
@@ -664,7 +674,7 @@ var Visualizer = {
         
         for (var i = 0; i < Visualizer.lights.length; i++) {
             Visualizer.lights[i].x = radius + 2*radius*i;
-            Visualizer.lights[i].y = canvas.height / 2;
+            Visualizer.lights[i].y = canvas.height/2;//radius + radius*i;
         }
     },
     
@@ -676,7 +686,7 @@ var Visualizer = {
         drawContext.clearRect(0, 0, canvas.width, canvas.height);
         analyser.getFloatFrequencyData(freqDomain);
 
-        var maxRadius = 100;
+        var maxRadius = 50;
         var maxHeight = 500;
 
         var maxFreq = 720;
@@ -699,16 +709,39 @@ var Visualizer = {
             
             Visualizer.lights[i].updateAverageIntensity(percent);
             
-            percent = 2*Math.abs(Visualizer.lights[i].averageIntensity - percent);
+            percent = Math.abs(Visualizer.lights[i].averageIntensity - percent);
+            percent = 1-percent;
             
+            var direction = 1;
+            if (Math.random() > .5)
+                direction = -1;
+            Visualizer.lights[i].x += 2 * percent * direction;
+
+            var direction = 1;
+            if (Math.random() > .5)
+                direction = -1;
+            Visualizer.lights[i].y += 2 * percent * direction;
+
+            if (Visualizer.lights[i].x > canvas.width + radius*2) {
+                Visualizer.lights[i].x = -radius*2;
+            } else if (Visualizer.lights[i].x < -radius*2) {
+                Visualizer.lights[i].x = canvas.width + radius*2;
+            }
+            
+            if (Visualizer.lights[i].y > canvas.height + radius*2) {
+                Visualizer.lights[i].y = -radius*2;
+            } else if (Visualizer.lights[i].y < -radius*2) {
+                Visualizer.lights[i].y = canvas.height + radius*2;
+            }
+
             var hue = percent;
-            hue = (hue) * 360;
-            hue = 200;
+            hue = (.8-hue) * 360;
+            //hue = 200;
             
             var radius = maxRadius * percent;
             
             drawContext.beginPath();
-            drawContext.arc(x, y, radius, 0, 2*Math.PI, false);
+            drawContext.arc(Visualizer.lights[i].x, Visualizer.lights[i].y, radius, 0, 2*Math.PI, false);
             drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
             drawContext.fill();
         }   
@@ -718,15 +751,15 @@ var Visualizer = {
 var LightShowSource = function () {
     this.x = 0;
     this.y = 0;
-    this.lastIntensity = 0.0;
-    this.averageIntensity = 0.0;
-    this.averageIntensityTotal = 0.0;
+    this.lastIntensity = 1.0;
+    this.averageIntensity = 1.0;
+    this.averageIntensityTotal = 1000.0;
 }
 
 LightShowSource.prototype.updateAverageIntensity = function(intensity) {
     this.averageIntensityTotal -= this.averageIntensity;
     this.averageIntensityTotal += intensity;
-    this.averageIntensity = this.averageIntensityTotal / 5000;
+    this.averageIntensity = this.averageIntensityTotal / 1000;
 }
 
 /****************************************/
