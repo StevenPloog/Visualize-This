@@ -42,9 +42,9 @@ var Visualizer = {
             if (Visualizer.visualType == 'light-show') {
                 Visualizer.createLightShowSources(50, 5000);
                 Visualizer.positionLightShow();
-            } else if (Visualizer.visualType == 'big-light-show') {
+            } else if (Visualizer.visualType == 'tornado') {
                 Visualizer.createLightShowSources(250, 1000);
-                Visualizer.positionBigLightShow();
+                Visualizer.positionTornado();
             }
         
             Visualizer.drawLoop();
@@ -101,8 +101,8 @@ var Visualizer = {
             case 'light-show':
                 Visualizer.drawLightShow(analyser);
                 break;
-            case 'big-light-show':
-                Visualizer.drawBigLightShow(analyser);
+            case 'tornado':
+                Visualizer.drawTornado(analyser);
                 break;
             default: break;
         }
@@ -666,7 +666,7 @@ var Visualizer = {
     },
 
     //Positions lightshow elements for the light show
-    positionBigLightShow: function() {
+    positionTornado: function() {
         var canvas = $('#iv-canvas').get(0);
         
         var radius = canvas.height / Visualizer.lights.length;
@@ -678,7 +678,7 @@ var Visualizer = {
         }
     },
     
-    drawBigLightShow: function(analyser) {
+    drawTornado: function(analyser) {
         var canvas = $('#iv-canvas').get(0);
         var drawContext = canvas.getContext('2d');
         var freqDomain = new Float32Array(analyser.frequencyBinCount);
