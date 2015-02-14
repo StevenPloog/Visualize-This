@@ -46,6 +46,8 @@ var Visualizer = {
         
             if (Visualizer.visualType == 'light-show')
                 Visualizer.positionLightShow();
+            else if (Visualizer.visualType == 'big-light-show')
+                Visualizer.positionBigLightShow();
         
             Visualizer.drawLoop();
         }
@@ -100,6 +102,9 @@ var Visualizer = {
 			case 'light-show':
 				Visualizer.drawLightShow(analyser);
 				break;
+            case 'big-light-show':
+                Visualizer.drawBigLightShow(analyser);
+                break;
             default: break;
         }
     
@@ -648,6 +653,65 @@ var Visualizer = {
 			drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
 			drawContext.fill();
 		}   
+    },
+
+        //Positions lightshow elements for the light show
+    positionBigLightShow: function() {
+        var canvas = $('#iv-canvas').get(0);
+        
+        var radius = canvas.width / Visualizer.lights.length;
+        radius /= 2;
+        
+        for (var i = 0; i < Visualizer.lights.length; i++) {
+            Visualizer.lights[i].x = radius + 2*radius*i;
+            Visualizer.lights[i].y = canvas.height / 2;
+        }
+    },
+    
+    drawBigLightShow: function(analyser) {
+        var canvas = $('#iv-canvas').get(0);
+        var drawContext = canvas.getContext('2d');
+        var freqDomain = new Float32Array(analyser.frequencyBinCount);
+
+        drawContext.clearRect(0, 0, canvas.width, canvas.height);
+        analyser.getFloatFrequencyData(freqDomain);
+
+        var maxRadius = 100;
+        var maxHeight = 500;
+
+        var maxFreq = 720;
+        var minFreq = 20;
+        var samplesPer = (maxFreq-minFreq) / Visualizer.lights.length;
+        var numBars = (maxFreq - minFreq) / samplesPer;
+        var barWidth =  3;
+
+        for (var i = 0; i < Visualizer.lights.length; i++) {
+            
+            var value = 0;
+            for (var x = 0; x < samplesPer; x++) {
+                value += freqDomain[i*samplesPer + x];
+                value -= analyser.minDecibels;
+                value -= weight(Visualizer.frequencyPerBin * (i*samplesPer+x));
+            }
+            value /= samplesPer;
+            value = nonNegative(value);
+            var percent = value / Visualizer.decibelRange;
+            
+            Visualizer.lights[i].updateAverageIntensity(percent);
+            
+            percent = 2*Math.abs(Visualizer.lights[i].averageIntensity - percent);
+            
+            var hue = percent;
+            hue = (hue) * 360;
+            hue = 200;
+            
+            var radius = maxRadius * percent;
+            
+            drawContext.beginPath();
+            drawContext.arc(x, y, radius, 0, 2*Math.PI, false);
+            drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
+            drawContext.fill();
+        }   
     }
 };
 
