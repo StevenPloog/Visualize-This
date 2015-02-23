@@ -39,12 +39,20 @@ var Visualizer = {
     startDrawLoop: function() {
         if (!Visualizer.drawing) {
         
-            if (Visualizer.visualType == 'light-show') {
-                Visualizer.createLightShowSources(50, 5000);
-                Visualizer.positionLightShow();
-            } else if (Visualizer.visualType == 'tornado') {
-                Visualizer.createLightShowSources(250, 1000);
-                Visualizer.positionTornado();
+            switch (Visualizer.visualType) {
+                case 'light-show':
+                    Visualizer.createLightShowSources(50, 5000);
+                    Visualizer.positionLightShow();
+                    break;
+                case 'tornado':
+                    Visualizer.createLightShowSources(250, 1000);
+                    Visualizer.positionTornado();
+                    break;
+                case 'bouncing-balls':
+                    Visualizer.createLightShowSources(250, 4);
+                    Visualizer.positionBouncingBalls();
+                default:
+                    break;
             }
         
             Visualizer.drawLoop();
@@ -809,13 +817,29 @@ var Visualizer = {
             var percent = value / Visualizer.decibelRange;
             
             Visualizer.lights[i].updateAverageIntensity(percent);
-            
-            percent = Math.abs(1-percent);//Visualizer.lights[i].averageIntensity - percent);
-            percent = 1-percent;
 
+            percent = Math.abs(Visualizer.lights[i].averageIntensity - percent);
+            percent = percent;
+            if (percent > .015 && Visualizer.lights[i].y >= canvas.height/2) {
+                Visualizer.lights[i].yVel -= 0;
+                Visualizer.lights[i].yVel -= 100*(percent-.015);
+            }
+
+            Visualizer.lights[i].yVel += 1;
+
+            // Bounce around center of screen height
+            if (   //(Visualizer.lights[i].y < canvas.height/2 && Visualizer.lights[i].yVel > 0)
+                (Visualizer.lights[i].y > canvas.height/2 && Visualizer.lights[i].yVel > 0))
+            {
+                Visualizer.lights[i].yVel = -.5*Visualizer.lights[i].yVel;
+            }
+
+            //Visualizer.lights[i].yVel -= percent;//Visualizer.lights[i].averageIntensity - percent;
+
+            Visualizer.lights[i].y += Visualizer.lights[i].yVel;
+                        
             var hue = percent;
             hue = (.8-hue) * 360;
-            //hue = 200;
             
             var radius = maxRadius * percent;
             if (radius < minRadius)
