@@ -104,6 +104,9 @@ var Visualizer = {
             case 'tornado':
                 Visualizer.drawTornado(analyser);
                 break;
+            case 'bouncing-balls':
+                Visualizer.drawBouncingBalls(analyser);
+                break;
             default: break;
         }
     
@@ -727,10 +730,10 @@ var Visualizer = {
             Visualizer.lights[i].addXVel(percent * direction);
             Visualizer.lights[i].x += Visualizer.lights[i].xVel;
 
-            var direction = 1;
+            var directionY = 1;
             if (Math.random() > .5)
-                direction = -1;
-            Visualizer.lights[i].addYVel(percent * direction);
+                directionY = -1;
+            Visualizer.lights[i].addYVel(percent * directionY);
             //Visualizer.lights[i].y += Visualizer.lights[i].yVel;
 
             if (Visualizer.lights[i].x >= .5*canvas.width + .65*canvas.height - .5*Visualizer.lights[i].y) {
@@ -746,6 +749,69 @@ var Visualizer = {
             } else if (Visualizer.lights[i].y < -radius*2) {
                 Visualizer.lights[i].y = canvas.height + radius*2;
             }*/
+
+            var hue = percent;
+            hue = (.8-hue) * 360;
+            //hue = 200;
+            
+            var radius = maxRadius * percent;
+            if (radius < minRadius)
+                radius = minRadius;
+            
+            drawContext.beginPath();
+            drawContext.arc(Visualizer.lights[i].x, Visualizer.lights[i].y, radius, 0, 2*Math.PI, false);
+            drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
+            drawContext.fill();
+        }   
+    },
+
+    //Positions lightshow elements for the light show
+    positionBouncingBalls: function() {
+        var canvas = $('#iv-canvas').get(0);
+        
+        var radius = canvas.width / Visualizer.lights.length;
+        radius /= 2;
+        
+        for (var i = 0; i < Visualizer.lights.length; i++) {
+            Visualizer.lights[i].x = radius + 2*radius*i;
+            Visualizer.lights[i].y = canvas.height/2;
+        }
+    },
+    
+    drawBouncingBalls: function(analyser) {
+        var canvas = $('#iv-canvas').get(0);
+        var drawContext = canvas.getContext('2d');
+        var freqDomain = new Float32Array(analyser.frequencyBinCount);
+
+        drawContext.clearRect(0, 0, canvas.width, canvas.height);
+        analyser.getFloatFrequencyData(freqDomain);
+
+        var maxRadius = 30;
+        var minRadius = 3;
+        var maxHeight = 500;
+
+        var maxFreq = 770;
+        var minFreq = 20;
+        var samplesPer = (maxFreq-minFreq) / Visualizer.lights.length;
+        var numBars = (maxFreq - minFreq) / samplesPer;
+        var barWidth =  3;
+
+        for (var i = 0; i < Visualizer.lights.length; i++) {
+            
+            var value = 0;
+            for (var x = 0; x < samplesPer; x++) {
+                value += freqDomain[i*samplesPer + x];
+                value -= analyser.minDecibels;
+                value -= weight(Visualizer.frequencyPerBin * (i*samplesPer+x));
+            }
+            value /= samplesPer;
+            value = nonNegative(value);
+            var percent = value / Visualizer.decibelRange;
+            
+            Visualizer.lights[i].updateAverageIntensity(percent);
+            
+            percent = Math.abs(1-percent);//Visualizer.lights[i].averageIntensity - percent);
+            percent = 1-percent;
 
             var hue = percent;
             hue = (.8-hue) * 360;
