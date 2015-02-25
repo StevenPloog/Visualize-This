@@ -19,7 +19,9 @@
         {
             "matches": [ "*://play.google.com/music/*" ],
             "run_at": "document_end",
-            "js": [ "js/jquery.min.js", "js/visualizer.js", "js/gpm-inject.js", "js/spectrum.js" ]
+            "js": [ "js/jquery.min.js", "js/visualizer.js", "js/gpm-inject.js",
+
+                    "js/v/Spectrum.js", "js/v/MiddleSpectrum.js", "js/v/Circles.js" ]
         },
 
         {
