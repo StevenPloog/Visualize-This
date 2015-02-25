@@ -40,10 +40,6 @@ var Visualizer = {
         if (!Visualizer.drawing) {
         
             switch (Visualizer.visualType) {
-                case 'light-show':
-                    Visualizer.createLightShowSources(50, 5000);
-                    Visualizer.positionLightShow();
-                    break;
                 case 'tornado':
                     Visualizer.createLightShowSources(250, 1000);
                     Visualizer.positionTornado();
@@ -76,20 +72,11 @@ var Visualizer = {
             case 'spectrum':
                 Visualizer.drawSpectrum(analyser,reverse);
                 break;
-            case 'spectrum-middle':
-                Visualizer.drawMiddleSpectrum(analyser);
-                break;
             case 'spectrum-mirror':
                 Visualizer.drawMirrorSpectrum(analyser);
                 break;
-            case 'squares':
-                Visualizer.drawSquares(analyser);
-                break;
             case 'circles':
                 Visualizer.drawCircles(analyser);
-                break;
-            case 'circles2':
-                Visualizer.drawCircles2(analyser);
                 break;
             case 'spins':
                 Visualizer.drawSpins(analyser);
@@ -105,9 +92,6 @@ var Visualizer = {
                 break;
             case 'risen-sun':
                 Visualizer.drawRisenSun(analyser);
-                break;
-            case 'light-show':
-                Visualizer.drawLightShow(analyser);
                 break;
             case 'tornado':
                 Visualizer.drawTornado(analyser);
@@ -132,7 +116,7 @@ var Visualizer = {
         Visualizer.lights = undefined;
     },
     
-    drawSpectrum: function(analyser,reverse) {
+    drawSpectrum: function(analyser) {
         var myCanvas = $('#iv-canvas').get(0);
         var drawContext = myCanvas.getContext('2d');
         var freqDomain = new Float32Array(analyser.frequencyBinCount);
@@ -161,12 +145,7 @@ var Visualizer = {
         
             drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
             drawContext.fillRect(i * barWidth, offset, slicesPerBar*barWidth, height);
-            if (reverse) drawContext.fillRect(myCanvas.width-i*barWidth, offset, slicesPerBar*barWidth, height);
         }
-    },
-    
-    drawMirrorSpectrum: function(analyser) {
-        Visualizer.drawSpectrum(analyser, true);
     },
     
     drawMiddleSpectrum: function(analyser) {
@@ -213,49 +192,6 @@ var Visualizer = {
         }
     },
     
-    drawSquares: function(analyser) {
-        var myCanvas = $('#iv-canvas').get(0);
-        var drawContext = myCanvas.getContext('2d');
-        var freqDomain = new Float32Array(analyser.frequencyBinCount);
-
-        drawContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-        analyser.getFloatFrequencyData(freqDomain);
-    
-        var maxFreq = 900;
-        var numRows = 30;
-        var numCols = 30;
-        var samplesPer = Math.floor(maxFreq / (numRows * numCols));
-        var pixelLength = 2*Math.min(myCanvas.width/(2*numCols), myCanvas.height/(2*numRows));
-        var colorLength = .875*pixelLength;
-        for (var row = 1; row <= numRows; row++) {
-            for (var col = 1; col <= numCols; col++) {
-                var value = 0;
-                for (var i = 0; i < samplesPer; i++) {
-                    var index = samplesPer*col;// *row;
-                    index += i + samplesPer*row*numCols;
-                    value += freqDomain[index];
-                    value -= analyser.minDecibels;
-                    value -= weight(Visualizer.frequencyPerBin * index);
-                }
-                value = value/samplesPer;
-                value = nonNegative(value);
-
-                var x = .5*myCanvas.width - colorLength*.5 - pixelLength*(col-1);
-                var y = pixelLength*(row-1) + .5*(pixelLength-colorLength);
-                var hue = value / Visualizer.decibelRange;
-                hue = (.9-hue) * 360;
-                if (hue % 360 > 250) hue = hue - (hue-250)/4;
-
-                drawContext.beginPath();
-                drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
-                if (value > 0) {
-                    drawContext.fillRect(x, y, colorLength, colorLength);
-                    drawContext.fillRect(myCanvas.width-x-colorLength, y, colorLength, colorLength);
-                }
-           }
-        }
-    },
-    
     drawCircles: function(analyser) {
         var myCanvas = $('#iv-canvas').get(0);
         var drawContext = myCanvas.getContext('2d');
@@ -293,53 +229,6 @@ var Visualizer = {
                 drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
                 drawContext.fill();
 
-                drawContext.beginPath();
-                drawContext.arc(myCanvas.width - x, y, radius, 0, 2*Math.PI, false);
-                drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
-                drawContext.fill();
-            }
-        }
-    },
-    
-    drawCircles2: function(analyser) {
-        var myCanvas = $('#iv-canvas').get(0);
-        var drawContext = myCanvas.getContext('2d');
-        var freqDomain = new Float32Array(analyser.frequencyBinCount);
-        
-        drawContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-        analyser.getFloatFrequencyData(freqDomain);
-        
-        var maxFreq = 900;
-        var numRows = 30;
-        var numCols = 30;
-        var samplesPerCircle = Math.floor(maxFreq / (numRows * numCols));
-        var maxRadius = Math.min(myCanvas.width/(2*numCols), myCanvas.height/(2*numRows));
-        for (var row = 1; row <= numRows; row++) {
-            for (var col = 1; col <= numCols; col++) {
-                var value = 0;
-                for (var i = 0; i < samplesPerCircle; i++) {
-                    var index = samplesPerCircle*col;// *row;
-                    index += i + samplesPerCircle*row*numCols;
-                    value += freqDomain[index];
-                    value -= analyser.minDecibels;
-                    value -= weight(Visualizer.frequencyPerBin * index);
-                }
-                value = value/samplesPerCircle;
-                value = nonNegative(value);
-                
-                //Radius is max*percent of max
-                var radius = maxRadius * value / Visualizer.decibelRange;
-                var x = maxRadius*2*(col-1)+ .5*myCanvas.width;// - maxRadius*numCols*2;
-                var y = maxRadius + maxRadius*2*(row-1);
-                //var hue = (samplesPerCircle*col + samplesPerCircle*row*numCols) / maxFreq * 360;
-                var hue = value / 256;
-                hue = (.9-hue) * 360;
-                
-                drawContext.beginPath();
-                drawContext.arc(x, y, radius, 0, 2*Math.PI, false);
-                drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
-                drawContext.fill();
-                
                 drawContext.beginPath();
                 drawContext.arc(myCanvas.width - x, y, radius, 0, 2*Math.PI, false);
                 drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
@@ -614,66 +503,6 @@ var Visualizer = {
         //drawContext.arc(canvas.width/2, canvas.height/2, innerRadius+2, 0, 2*Math.PI, false);
         //drawContext.fillStyle = 'hsl(' + hue + ', 0%, 00%)';
         //drawContext.fill();
-    },
-    
-    //Positions lightshow elements for the light show
-    positionLightShow: function() {
-        var canvas = $('#iv-canvas').get(0);
-        
-        var radius = canvas.width / Visualizer.lights.length;
-        radius /= 2;
-        
-        for (var i = 0; i < Visualizer.lights.length; i++) {
-            Visualizer.lights[i].x = radius + 2*radius*i;
-            Visualizer.lights[i].y = canvas.height / 2;
-        }
-    },
-    
-    drawLightShow: function(analyser) {
-        var canvas = $('#iv-canvas').get(0);
-        var drawContext = canvas.getContext('2d');
-        var freqDomain = new Float32Array(analyser.frequencyBinCount);
-
-        drawContext.clearRect(0, 0, canvas.width, canvas.height);
-        analyser.getFloatFrequencyData(freqDomain);
-
-        var maxRadius = 100;
-        var maxHeight = 500;
-
-        var maxFreq = 720;
-        var minFreq = 20;
-        var samplesPer = (maxFreq-minFreq) / Visualizer.lights.length;
-        var numBars = (maxFreq - minFreq) / samplesPer;
-        var barWidth =  3;
-
-        for (var i = 0; i < Visualizer.lights.length; i++) {
-            
-            var value = 0;
-            for (var x = 0; x < samplesPer; x++) {
-                value += freqDomain[i*samplesPer + x];
-                value -= analyser.minDecibels;
-                value -= weight(Visualizer.frequencyPerBin * (i*samplesPer+x));
-            }
-            value /= samplesPer;
-            value = nonNegative(value);
-            var percent = value / Visualizer.decibelRange;
-            
-            Visualizer.lights[i].updateAverageIntensity(percent);
-            
-            percent = 2*Math.abs(Visualizer.lights[i].averageIntensity - percent);
-            
-            var hue = percent;
-            hue = (hue) * 360;
-            hue = 200;
-            
-            var radius = maxRadius * percent;
-            
-            drawContext.beginPath();
-            drawContext.fillRect(Visualizer.lights[i].x, Visualizer.lights[i].y, 25, maxHeight*percent);
-            //drawContext.arc(Visualizer.lights[i].x, Visualizer.lights[i].y, radius, 0, 2*Math.PI, false);
-            drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
-            drawContext.fill();
-        }   
     },
 
     //Positions lightshow elements for the light show
