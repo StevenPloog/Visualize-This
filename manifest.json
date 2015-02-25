@@ -19,7 +19,7 @@
         {
             "matches": [ "*://play.google.com/music/*" ],
             "run_at": "document_end",
-            "js": [ "js/jquery.min.js", "js/visualizer.js", "js/gpm-inject.js" ]
+            "js": [ "js/jquery.min.js", "js/visualizer.js", "js/gpm-inject.js", "js/spectrum.js" ]
         },
 
         {
@@ -32,6 +32,7 @@
 	"web_accessible_resources": [
         "css/*.css",
         "images/*.png",
-        "html/*.html"
+        "html/*.html",
+        "js/jquery.min.js"
     ]
 }
