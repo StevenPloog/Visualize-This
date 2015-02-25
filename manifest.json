@@ -21,7 +21,7 @@
             "run_at": "document_end",
             "js": [ "js/jquery.min.js", "js/visualizer.js", "js/gpm-inject.js",
 
-                    "js/v/Spectrum.js", "js/v/MiddleSpectrum.js", "js/v/Circles.js" ]
+                    "js/v/Spectrum.js", "js/v/SpectrumMiddle.js", "js/v/Circles.js" ]
         },
 
         {
