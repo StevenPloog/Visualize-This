@@ -90,17 +90,6 @@ var Visualizer = {
     drawLoop: function() {
         Visualizer.visualizerRef.draw(); 
         Visualizer.drawing = window.requestAnimationFrame(Visualizer.drawLoop, $('#iv-canvas'));
-    },
-
-    createLightShowSources: function(numSources, numAverages) {
-        Visualizer.lights = [];
-        for (var i = 0; i < numSources; i++) {
-            Visualizer.lights.push(new LightShowSource(numAverages));
-        }
-    },
-
-    destroyLightShowSources: function() {
-        Visualizer.lights = undefined;
     }
 };
 
@@ -210,6 +199,7 @@ function dWeight(f) {
     return 20 * Math.log10(r);
 }
 
+// Returns X if X >= 0, else return 0
 function nonNegative(x) {
     if (x >= 0) return x;
     return 0;

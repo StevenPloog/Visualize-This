@@ -1,3 +1,52 @@
+function Ball(numAverages) {
+    Particle.call(this, numAverages);
+
+    this.gravityAccel = 1;
+    this.maxY = 100;
+    this.maxVel = 10;
+}
+
+Ball.prototype = Object.create(Particle.prototype);
+Ball.prototype.constructor = Ball;
+
+Ball.prototype.tick = function() {
+    //Particle.prototype.tick.call(this); // Call super's tick method
+
+    // Update Y-position
+    if (this.y+this.yVel < this.maxY) {
+        this.y += this.yVel;
+    } else if (this.y < this.maxY) {
+        this.y = this.maxY;
+    }
+
+    // Update Y-velocity
+    this.yVel += this.yAccel;
+    if (this.y == this.maxY) {
+        // Bounce off of maxY coordinate
+        this.yVel = -.5*this.yVel
+
+    } else if (this.y <= 0 && this.yVel < 0) {
+        // Bounce off of the ceiling
+        this.yVel = -this.yVel;
+
+    } else if (this.yVel > this.maxVel) {
+        // Keep yVel below maxVel
+        this.yVel = this.maxVel;
+
+    }
+
+    // Update Y-acceleration
+    this.yAccel += this.gravityAccel;
+    if (this.yAccel > this.gravityAccel) {
+        this.yAccel = this.gravityAccel;
+    }
+
+    // Stop the ball if it is resting on the maxY coordinate
+    if (Math.abs(this.yVel) < .25 && this.y > this.maxY-10) {
+        this.y = this.maxY;
+    }
+}
+
 var BouncingBalls = function(canvas, analyser) {
 
     this.canvas = canvas;
@@ -10,9 +59,10 @@ var BouncingBalls = function(canvas, analyser) {
     var radius = canvas.width / this.numLights;
     radius /= 2;
     for (var i = 0; i < this.numLights; i++) {
-        this.lights.push(new LightShowSource(30));
+        this.lights.push(new Ball(30));
         this.lights[i].x = radius + 2*radius*i;
         this.lights[i].y = .75*canvas.height;
+        this.lights[i].maxY = .75*canvas.height;
     }
 }
 
@@ -51,26 +101,13 @@ BouncingBalls.prototype.draw = function() {
         percent = Math.abs(this.lights[i].averageIntensity - percent);
         percent = 1-percent;
         if (percent < 1-.05 && this.lights[i].y >= .75*canvas.height) {
-            this.lights[i].yAccel = 25*percent;
+            this.lights[i].yAccel = -5*percent;
             //this.lights[i].yVel -= 0;
             //this.lights[i].yVel -= 25*(percent);
             this.lights[i].hue = 360*this.lights[i].yAccel/25;
         }
 
-        //this.lights[i].yVel += 2;
-
-        // Bounce around center of screen height
-        if (this.lights[i].y > .75*canvas.height && this.lights[i].yVel > 0) {
-            this.lights[i].yVel = -.5*this.lights[i].yVel;
-            this.lights[i].hue = 360*this.lights[i].yVel/25;
-        }
-
-        if (this.lights[i].y < 0 && this.lights[i].yVel < 0) {
-            this.lights[i].yVel = -this.lights[i].yVel;
-            this.lights[i].hue = 360*this.lights[i].yVel/25;
-        }
-
-        this.lights[i].physics(1);
+        this.lights[i].tick();
 
         var radius = maxRadius * percent;
         if (radius < minRadius)
