@@ -1,9 +1,9 @@
 function Ball(numAverages) {
     Particle.call(this, numAverages);
 
-    this.gravityAccel = 1;
+    this.gravityAccel = 3;
     this.maxY = 100;
-    this.maxVel = 10;
+    this.maxVel = 100;
 }
 
 Ball.prototype = Object.create(Particle.prototype);
@@ -13,8 +13,9 @@ Ball.prototype.tick = function() {
     //Particle.prototype.tick.call(this); // Call super's tick method
 
     // Update Y-position
+    this.y += this.yVel;
     if (this.y+this.yVel < this.maxY) {
-        this.y += this.yVel;
+        //this.y += this.yVel;
     } else if (this.y < this.maxY) {
         this.y = this.maxY;
     }
@@ -23,7 +24,7 @@ Ball.prototype.tick = function() {
     this.yVel += this.yAccel;
     if (this.y == this.maxY) {
         // Bounce off of maxY coordinate
-        this.yVel = -.5*this.yVel
+        this.yVel = -.1*this.yVel
 
     } else if (this.y <= 0 && this.yVel < 0) {
         // Bounce off of the ceiling
@@ -43,7 +44,7 @@ Ball.prototype.tick = function() {
 
     // Stop the ball if it is resting on the maxY coordinate
     if (Math.abs(this.yVel) < .25 && this.y > this.maxY-10) {
-        this.y = this.maxY;
+        //this.y = this.maxY;
     }
 }
 
@@ -54,12 +55,12 @@ var BouncingBalls = function(canvas, analyser) {
     this.drawContext = this.canvas.getContext('2d');
 
     this.lights = [];
-    this.numLights = 50;
+    this.numLights = 750;
 
     var radius = canvas.width / this.numLights;
     radius /= 2;
     for (var i = 0; i < this.numLights; i++) {
-        this.lights.push(new Ball(30));
+        this.lights.push(new Ball(60));
         this.lights[i].x = radius + 2*radius*i;
         this.lights[i].y = .75*canvas.height;
         this.lights[i].maxY = .75*canvas.height;
@@ -74,8 +75,8 @@ BouncingBalls.prototype.draw = function() {
     drawContext.clearRect(0, 0, canvas.width, canvas.height);
     this.analyser.getFloatFrequencyData(freqDomain);
 
-    var maxRadius = 10;
-    var minRadius = 10;
+    var maxRadius = 7.5;
+    var minRadius = 7.5;
     var maxHeight = 500;
 
     var maxFreq = 770;
@@ -99,14 +100,15 @@ BouncingBalls.prototype.draw = function() {
         this.lights[i].updateAverageIntensity(percent);
 
         percent = Math.abs(this.lights[i].averageIntensity - percent);
-        percent = 1-percent;
-        if (percent < 1-.05 && this.lights[i].y >= .75*canvas.height) {
-            this.lights[i].yAccel = -5*percent;
-            //this.lights[i].yVel -= 0;
-            //this.lights[i].yVel -= 25*(percent);
-            this.lights[i].hue = 360*this.lights[i].yAccel/25;
+        this.lights[i].updateAverageIntensityDiff(percent);
+
+        percent = percent+this.lights[i].averageIntensityDiff;
+        if (percent > .01 && this.lights[i].y >= .75*canvas.height) {
+            this.lights[i].yAccel = -50*percent;
+            this.lights[i].hue = 360*this.lights[i].yAccel/5;
         }
 
+        //this.lights[i].hue = 360*this.lights[i].yAccel/5;
         this.lights[i].tick();
 
         var radius = maxRadius * percent;

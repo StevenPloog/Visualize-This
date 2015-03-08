@@ -11,10 +11,15 @@ var Particle = function (numAverages) {
 
     this.hue = 0;
 
-    this.lastIntensity = 1.0;
     this.numAverages = numAverages;
+    this.lastIntensity = 1.0;
     this.averageIntensity = 1.0;
     this.averageIntensityTotal = this.numAverages;
+    
+    this.numDiffAverages = numAverages/4;
+    this.lastIntensityDiff = 0;
+    this.averageIntensityDiff = 0;
+    this.averageIntensityDiffTotal = 0;
 }
 
 Particle.prototype.tick = function() {
@@ -28,4 +33,10 @@ Particle.prototype.updateAverageIntensity = function(intensity) {
     this.averageIntensityTotal -= this.averageIntensity;
     this.averageIntensityTotal += intensity;
     this.averageIntensity = this.averageIntensityTotal / this.numAverages;
+}
+
+Particle.prototype.updateAverageIntensityDiff = function(intensityDiff) {
+    this.averageIntensityDiffTotal -= this.averageIntensityDiff;
+    this.averageIntensityDiffTotal += intensityDiff;
+    this.averageIntensityDiff = this.averageIntensityDiffTotal / this.numDiffAverages;
 }
