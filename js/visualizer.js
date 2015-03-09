@@ -22,7 +22,7 @@ var Visualizer = {
     
     getAnalyzer: function(sourceTag) {
         if (!Visualizer.ctx) {
-            Visualizer.ctx = new (window.audioContext || window.webkitAudioContext);
+            Visualizer.ctx = new (window.AudioContext || window.webkitAudioContext);
             Visualizer.source = Visualizer.ctx.createMediaElementSource($(sourceTag)[0]);
 
             Visualizer.analyser = Visualizer.ctx.createAnalyser();
