@@ -83,7 +83,6 @@ var Visualizer = {
         if (Visualizer.drawing) {
             window.cancelAnimationFrame(Visualizer.drawing);
             Visualizer.drawing = undefined;
-            Visualizer.destroyLightShowSources();
         }
     },
     
