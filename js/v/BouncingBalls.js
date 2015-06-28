@@ -1,7 +1,7 @@
 function Ball(numAverages) {
     Particle.call(this, numAverages);
 
-    this.gravityAccel = 3;
+    this.gravityAccel = 6;
     this.maxY = 100;
     this.maxVel = 100;
 }
@@ -104,7 +104,7 @@ BouncingBalls.prototype.draw = function() {
 
         percent = percent+this.lights[i].averageIntensityDiff;
         if (percent > .01 && this.lights[i].y >= .75*canvas.height) {
-            this.lights[i].yAccel = -50*percent;
+            this.lights[i].yAccel = -15*percent;
             this.lights[i].hue = 360*this.lights[i].yAccel/5;
         }
 
