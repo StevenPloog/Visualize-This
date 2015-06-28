@@ -11,16 +11,16 @@ function gpmInject() {
         
         $(window).resize(function() {
             //$('#player').addClass('visualize');
-            //$('#iv-main-div').fadeIn();
-            $('#iv-main-div').height($('#oneGoogleWrapper').height() + $('#nav-content-container').height());
-            $('#iv-canvas').height($('iv-main-div').height());
+            //$('#vt-main-div').fadeIn();
+            $('#vt-main-div').height($('#oneGoogleWrapper').height() + $('#nav-content-container').height());
+            $('#vt-canvas').height($('vt-main-div').height());
             
             //Scale the canvas to achieve proper resolution
-            var canvas = $('#iv-canvas').get(0);
-            canvas.width=$('#iv-main-div').width()*window.devicePixelRatio;
-            canvas.height=$('#iv-main-div').height()*window.devicePixelRatio;
-            canvas.style.width=$('#iv-main-div').width() + "px";
-            canvas.style.height=$('#iv-main-div').height() + "px";
+            var canvas = $('#vt-canvas').get(0);
+            canvas.width=$('#vt-main-div').width()*window.devicePixelRatio;
+            canvas.height=$('#vt-main-div').height()*window.devicePixelRatio;
+            canvas.style.width=$('#vt-main-div').width() + "px";
+            canvas.style.height=$('#vt-main-div').height() + "px";
         });
 }
 
@@ -39,27 +39,27 @@ function injectStyle() {
 //Creates the canvas and the container divs
 function injectCanvas() {
     var main = $('<div />', {
-        id: 'iv-main-div',
-        class: 'iv-main-div'
+        id: 'vt-main-div',
+        class: 'vt-main-div'
     });
     
-    main.html('<canvas id="iv-canvas" style="background-color:black;"></canvas>');
+    main.html('<canvas id="vt-canvas" style="background-color:black;"></canvas>');
 
     main.on('click', function() {
-        $('#iv-main-div').fadeOut();
+        $('#vt-main-div').fadeOut();
         $('#player').removeClass('visualize');
         Visualizer.endDrawLoop();
     });
 
     $('body').append(main);
-    $("#iv-main-div").hide();
+    $("#vt-main-div").hide();
 }
 
 //Add the start button to the page
 function injectButton() {
     var button = $('<button />', {
-        id: 'iv-button-toggle',
-        class: 'button-content'//button small vertical-align gpm-iv-button'
+        id: 'vt-button-toggle',
+        class: 'button-content'//button small vertical-align gpm-vt-button'
     }).append('<span>Visualize</span>');
 
     button.on('click', function(e) {
@@ -78,12 +78,12 @@ function injectButton() {
             });
 
             //Position the menu
-            var location = $('#iv-button-toggle').offset();
+            var location = $('#vt-button-toggle').offset();
                 menu.css('-webkit-user-select', 'none');
                 menu.css({
                     position: "absolute",
-                    top: 2 + location.top + $('#iv-button-toggle').height(),
-                    right: $('body').width() - (location.left + $('#iv-button-toggle').outerWidth())
+                    top: 2 + location.top + $('#vt-button-toggle').height(),
+                    right: $('body').width() - (location.left + $('#vt-button-toggle').outerWidth())
                 });
 
             //Adds highlighting to menu elements
@@ -97,16 +97,16 @@ function injectButton() {
             //Start visualizers
             menu.on('click', '.goog-menuitem', function() {
                 $('#player').addClass('visualize');
-                $('#iv-main-div').fadeIn();
-                $('#iv-main-div').height($('#oneGoogleWrapper').height() + $('#nav-content-container').height());
-                $('#iv-canvas').height($('iv-main-div').height());
+                $('#vt-main-div').fadeIn();
+                $('#vt-main-div').height($('#oneGoogleWrapper').height() + $('#nav-content-container').height());
+                $('#vt-canvas').height($('vt-main-div').height());
 
                 //Scale the canvas to achieve proper resolution
-                var canvas = $('#iv-canvas').get(0);
-                canvas.width=$('#iv-main-div').width()*window.devicePixelRatio;
-                canvas.height=$('#iv-main-div').height()*window.devicePixelRatio;
-                canvas.style.width=$('#iv-main-div').width() + "px";
-                canvas.style.height=$('#iv-main-div').height() + "px";
+                var canvas = $('#vt-canvas').get(0);
+                canvas.width=$('#vt-main-div').width()*window.devicePixelRatio;
+                canvas.height=$('#vt-main-div').height()*window.devicePixelRatio;
+                canvas.style.width=$('#vt-main-div').width() + "px";
+                canvas.style.height=$('#vt-main-div').height() + "px";
 
                 Visualizer.visualType = $(this).attr('id');
                 Visualizer.getAnalyzer('audio');

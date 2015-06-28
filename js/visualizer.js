@@ -42,34 +42,34 @@ var Visualizer = {
         
             switch (Visualizer.visualType) {
                 case 'spectrum':
-                    Visualizer.visualizerRef = new Spectrum($('#iv-canvas').get(0), Visualizer.analyser);
+                    Visualizer.visualizerRef = new Spectrum($('#vt-canvas').get(0), Visualizer.analyser);
                     break;
                 case 'spectrum-middle':
-                    Visualizer.visualizerRef = new SpectrumMiddle($('#iv-canvas').get(0), Visualizer.analyser);
+                    Visualizer.visualizerRef = new SpectrumMiddle($('#vt-canvas').get(0), Visualizer.analyser);
                     break;
                 case 'circles':
-                    Visualizer.visualizerRef = new Circles($('#iv-canvas').get(0), Visualizer.analyser);
+                    Visualizer.visualizerRef = new Circles($('#vt-canvas').get(0), Visualizer.analyser);
                     break;
                 case 'spins':
-                    Visualizer.visualizerRef = new Spins($('#iv-canvas').get(0), Visualizer.analyser);
+                    Visualizer.visualizerRef = new Spins($('#vt-canvas').get(0), Visualizer.analyser);
                     break;
                 case 'spirals':
-                    Visualizer.visualizerRef = new Spirals($('#iv-canvas').get(0), Visualizer.analyser);
+                    Visualizer.visualizerRef = new Spirals($('#vt-canvas').get(0), Visualizer.analyser);
                     break;
                 case 'spirals-inverted':
-                    Visualizer.visualizerRef = new SpiralsInverted($('#iv-canvas').get(0), Visualizer.analyser);
+                    Visualizer.visualizerRef = new SpiralsInverted($('#vt-canvas').get(0), Visualizer.analyser);
                     break;
                 case 'rising-sun':
-                    Visualizer.visualizerRef = new RisingSun($('#iv-canvas').get(0), Visualizer.analyser);
+                    Visualizer.visualizerRef = new RisingSun($('#vt-canvas').get(0), Visualizer.analyser);
                     break;
                 case 'risen-sun':
-                    Visualizer.visualizerRef = new RisenSun($('#iv-canvas').get(0), Visualizer.analyser);
+                    Visualizer.visualizerRef = new RisenSun($('#vt-canvas').get(0), Visualizer.analyser);
                     break;
                 case 'tornado':
-                    Visualizer.visualizerRef = new Tornado($('#iv-canvas').get(0), Visualizer.analyser);
+                    Visualizer.visualizerRef = new Tornado($('#vt-canvas').get(0), Visualizer.analyser);
                     break;
                 case 'bouncing-balls':
-                    Visualizer.visualizerRef = new BouncingBalls($('#iv-canvas').get(0), Visualizer.analyser);
+                    Visualizer.visualizerRef = new BouncingBalls($('#vt-canvas').get(0), Visualizer.analyser);
                     break;
                 default:
                     break;
@@ -88,7 +88,7 @@ var Visualizer = {
     
     drawLoop: function() {
         Visualizer.visualizerRef.draw(); 
-        Visualizer.drawing = window.requestAnimationFrame(Visualizer.drawLoop, $('#iv-canvas'));
+        Visualizer.drawing = window.requestAnimationFrame(Visualizer.drawLoop, $('#vt-canvas'));
     }
 };
 

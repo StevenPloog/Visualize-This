@@ -10,17 +10,17 @@ function ytInject() {
     injectButton();
     
     $(window).resize(function() {
-        $('#iv-main-div').height($('.html5-video-container').height());
-        $('#iv-main-div').width($('.html5-video-container').width());
-        $('#iv-canvas').height($('iv-main-div').height());
-        $('#iv-canvas').width($('iv-main-div').width());
+        $('#vt-main-div').height($('.html5-video-container').height());
+        $('#vt-main-div').width($('.html5-video-container').width());
+        $('#vt-canvas').height($('vt-main-div').height());
+        $('#vt-canvas').width($('vt-main-div').width());
         
         //Scale the canvas to achieve proper resolution        
-        var canvas = $('#iv-canvas').get(0);
-        canvas.width=$('#iv-main-div').width()*window.devicePixelRatio;
-        canvas.height=$('#iv-main-div').height()*window.devicePixelRatio;
-        canvas.style.width=$('#iv-main-div').width() + "px";
-        canvas.style.height=$('#iv-main-div').height() + "px";
+        var canvas = $('#vt-canvas').get(0);
+        canvas.width=$('#vt-main-div').width()*window.devicePixelRatio;
+        canvas.height=$('#vt-main-div').height()*window.devicePixelRatio;
+        canvas.style.width=$('#vt-main-div').width() + "px";
+        canvas.style.height=$('#vt-main-div').height() + "px";
     });
 }
 
@@ -37,23 +37,23 @@ function injectStyle() {
 
 function injectCanvas() {
     var main = $('<div />', {
-        id: 'iv-main-div',
-        class: 'iv-main-div'
+        id: 'vt-main-div',
+        class: 'vt-main-div'
     });
 
-    main.html('<canvas id="iv-canvas" style="background-color:black;"></canvas>');
+    main.html('<canvas id="vt-canvas" style="background-color:black;"></canvas>');
     
-    //$.get(chrome.extension.getURL('html/iv-main.html'), function(htmls) {
+    //$.get(chrome.extension.getURL('html/vt-main.html'), function(htmls) {
     //    main.html(htmls);
     //});
 
     $('.html5-video-container').append(main);
-    $("#iv-main-div").hide();
+    $("#vt-main-div").hide();
 }
 
 function injectButton() {
     var button = $('<div />', {
-        id: 'iv-button-toggle',
+        id: 'vt-button-toggle',
         class: 'ytp-button yt-button',
         style: 'background: url('+chrome.extension.getURL('images/icon16.png')+') no-repeat center'
     });
@@ -68,7 +68,7 @@ function injectButton() {
     
     button.on('click', function(e) {
         if ($('#vt-menu-dropdown').length) {
-            if ($('#iv-main-div').css('display') == 'none') {
+            if ($('#vt-main-div').css('display') == 'none') {
                 $('#vt-menu-dropdown').css({
                     display: '',
                     position: 'absolute',
@@ -76,7 +76,7 @@ function injectButton() {
                     bottom: '28px'
                 });
             } else {
-                $('#iv-main-div').fadeOut();
+                $('#vt-main-div').fadeOut();
                 Visualizer.endDrawLoop();
             }
         } else {
@@ -92,18 +92,18 @@ function injectButton() {
 
             //Start visualizers
             menu.on('click', '.yt-uix-button-menu-item', function(e) {
-                $('#iv-main-div').fadeIn();
-                $('#iv-main-div').height($('.html5-video-container').height());
-                $('#iv-main-div').width($('.html5-video-container').width());
-                $('#iv-canvas').height($('iv-main-div').height());
-                $('#iv-canvas').width($('iv-main-div').width());
+                $('#vt-main-div').fadeIn();
+                $('#vt-main-div').height($('.html5-video-container').height());
+                $('#vt-main-div').width($('.html5-video-container').width());
+                $('#vt-canvas').height($('vt-main-div').height());
+                $('#vt-canvas').width($('vt-main-div').width());
 
                 //Scale the canvas to achieve proper resolution
-                var canvas = $('#iv-canvas').get(0);
-                canvas.width=$('#iv-main-div').width()*window.devicePixelRatio;
-                canvas.height=$('#iv-main-div').height()*window.devicePixelRatio;
-                canvas.style.width=$('#iv-main-div').width() + "px";
-                canvas.style.height=$('#iv-main-div').height() + "px";
+                var canvas = $('#vt-canvas').get(0);
+                canvas.width=$('#vt-main-div').width()*window.devicePixelRatio;
+                canvas.height=$('#vt-main-div').height()*window.devicePixelRatio;
+                canvas.style.width=$('#vt-main-div').width() + "px";
+                canvas.style.height=$('#vt-main-div').height() + "px";
 
                 Visualizer.visualType = $(this).attr('id');
                 Visualizer.getAnalyzer('video.video-stream');
