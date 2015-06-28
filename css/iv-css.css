@@ -13,6 +13,8 @@ $canvas-background #00FF00;
 }
 
 .gpm-iv-button {
+	width: 48px;
+	height: 48px;
 	float: right;
 	padding-top: 0px;
 	padding-right: 20px;

@@ -59,7 +59,7 @@ function injectCanvas() {
 function injectButton() {
     var button = $('<button />', {
         id: 'iv-button-toggle',
-        class: 'button small vertical-align gpm-iv-button'
+        class: 'button-content'//button small vertical-align gpm-iv-button'
     }).append('<span>Visualize</span>');
 
     button.on('click', function(e) {
@@ -116,14 +116,14 @@ function injectButton() {
             //Hide the menu when a click occurs outside of it
             $('body').click(function(e) { $('#vt-menu-dropdown').css('display', 'none'); });
 
-            $('body').append(menu);
+            $('#material-app-bar').append(menu);
         }
 
         //Keep menu up if button is pressed again
         e.stopPropagation();
 
-        $('#nav-container .music-banner .music-banner-title').html("NUG3NT");
+        //$('#nav-container .music-banner .music-banner-title').html("NUG3NT");
     });
 
-    $('#headerBar .nav-bar').prepend(button);
+    $('#material-app-bar').append(button);
 }
