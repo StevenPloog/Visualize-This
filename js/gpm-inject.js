@@ -62,6 +62,19 @@ function injectButton() {
         class: 'button-content'//button small vertical-align gpm-vt-button'
     }).append('<span>Visualize</span>');
 
+    /*var button = $('<sj-icon-button />', {
+        id: 'vt-button-toggle',
+        icon: chrome.extension.getURL('images/icon48.png'),
+        role: 'button',
+        tabindex: '0',
+        title: 'Visualize this',
+        'aria-label': 'Visualize this',
+        class: 'target',
+        'data-id': 'vt-button-toggle',
+        'data-type': 'ap',
+        'no-focus': ''
+    });*/
+
     button.on('click', function(e) {
         if ($('#vt-menu-dropdown').length) {
             $('#vt-menu-dropdown').css('display', '');
@@ -116,14 +129,12 @@ function injectButton() {
             //Hide the menu when a click occurs outside of it
             $('body').click(function(e) { $('#vt-menu-dropdown').css('display', 'none'); });
 
-            $('#material-app-bar').append(menu);
+            $('body').append(menu);
         }
 
         //Keep menu up if button is pressed again
         e.stopPropagation();
-
-        //$('#nav-container .music-banner .music-banner-title').html("NUG3NT");
     });
 
-    $('#material-app-bar').append(button);
+    $('#material-one-right').append(button);
 }

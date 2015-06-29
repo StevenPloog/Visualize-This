@@ -29,7 +29,7 @@
 
         {
             "matches": [ "*://www.youtube.com/watch*" ],
-            "run_at": "document_end",
+            //"run_at": "document_end",
             "js": [ "js/jquery.min.js", "js/visualizer.js", "js/yt-inject.js", "js/Particle.js",
 
                     "js/v/Spectrum.js", "js/v/SpectrumMiddle.js", "js/v/Circles.js", "js/v/Spins.js", "js/v/SpiralsInverted.js",
