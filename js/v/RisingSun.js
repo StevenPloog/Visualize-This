@@ -7,7 +7,7 @@ var RisingSun = function(canvas, analyser) {
 }
 
 RisingSun.prototype.draw = function() {
-    var canvas = $('#iv-canvas').get(0);
+    var canvas = $('#vt-canvas').get(0);
     var drawContext = canvas.getContext('2d');
     var freqDomain = new Float32Array(this.analyser.frequencyBinCount);
 
