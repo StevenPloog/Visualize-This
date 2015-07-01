@@ -71,6 +71,9 @@ var Visualizer = {
                 case 'bouncing-balls':
                     Visualizer.visualizerRef = new BouncingBalls($('#vt-canvas').get(0), Visualizer.analyser);
                     break;
+                case 'flag':
+                    Visualizer.visualizerRef = new Flag($('#vt-canvas').get(0), Visualizer.analyser);
+                    break;
                 default:
                     break;
             }

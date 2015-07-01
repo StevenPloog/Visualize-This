@@ -23,7 +23,7 @@
                     "js/jquery.min.js", "js/visualizer.js", "js/gpm-inject.js", "js/Particle.js",
 
                     "js/v/Spectrum.js", "js/v/SpectrumMiddle.js", "js/v/Circles.js", "js/v/Spins.js", "js/v/SpiralsInverted.js",
-                    "js/v/RisenSun.js", "js/v/RisingSun.js", "js/v/Spirals.js", "js/v/Tornado.js", "js/v/BouncingBalls.js"
+                    "js/v/RisenSun.js", "js/v/RisingSun.js", "js/v/Spirals.js", "js/v/Tornado.js", "js/v/BouncingBalls.js", "js/v/Flag.js"
                 ]
         },
 
