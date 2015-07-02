@@ -12,7 +12,7 @@ Flag.prototype.draw = function() {
     var freqDomain = new Float32Array(this.analyser.frequencyBinCount);
 
     drawContext.clearRect(0, 0, canvas.width, canvas.height);
-    drawContext.fillStyle="black";
+    drawContext.fillStyle="white";
     drawContext.fillRect(0, 0, canvas.width, canvas.height);
     this.analyser.getFloatFrequencyData(freqDomain);
 
@@ -49,14 +49,14 @@ Flag.prototype.draw = function() {
         value = value / Visualizer.decibelRange;
 
         var hue = 45*value;
-        if (i % 2 == 1) {
+        if (i % 2 == 0) {
             //hue *= .5;
             hue += 340;
         } else {
             hue += 200;
         }
 
-        drawContext.fillStyle = 'hsl(' + hue + ', 100%, ' + Math.floor(100*value) + '%)';
+        drawContext.fillStyle = 'hsl(' + hue + ', 100%, ' + Math.floor(100-75*value) + '%)';
 
         //drawContext.fillStyle = 'hsl(' + i*30 + ', 100%, 50%)';
         drawContext.fillRect(flagLeft, flagTop+i*stripeHeight, flagWidth, stripeHeight);
