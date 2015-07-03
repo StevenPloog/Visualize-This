@@ -4,6 +4,8 @@ var Flag = function(canvas, analyser) {
     this.analyser = analyser;
     this.drawContext = this.canvas.getContext('2d');
 
+    this.eaglePic = new Image();
+    this.eaglePic.src = chrome.extension.getURL('images/eagle360.png');
 }
 
 Flag.prototype.draw = function() {
@@ -36,6 +38,8 @@ Flag.prototype.draw = function() {
     var starXSpace      = starRectWidth / numStarCols;
     var starYSpace      = starRectHeight / numStarRows;
 
+    //drawContext.drawImage(this.eaglePic, flagLeft+.97*flagWidth, 50);//flagLeft+.75*flagWidth, flagTop + .5*starRectHeight);
+
     for (var i = 0; i < numStripes; i++) {
         var value = 0;
 
@@ -59,7 +63,9 @@ Flag.prototype.draw = function() {
         drawContext.fillStyle = 'hsl(' + hue + ', 100%, ' + Math.floor(100-75*value) + '%)';
 
         //drawContext.fillStyle = 'hsl(' + i*30 + ', 100%, 50%)';
-        drawContext.fillRect(flagLeft, flagTop+i*stripeHeight, flagWidth, stripeHeight);
+        drawContext.fillRect(flagLeft, flagTop+i*stripeHeight, .75*flagWidth + .35*flagWidth*value, stripeHeight);
+        if (i == 3)
+        drawContext.drawImage(this.eaglePic, flagLeft+.75*flagWidth+.35*flagWidth*value, flagTop+i*stripeHeight);
     }
 
     drawContext.fillStyle = 'hsl(0, 0%, 100%)';
@@ -89,11 +95,32 @@ Flag.prototype.draw = function() {
             }
 
             drawContext.fillStyle = 'hsl(' + hue + ', 100%, ' + Math.floor(40+50*value) + '%)';
-            drawContext.beginPath();
+            /*drawContext.beginPath();
             drawContext.arc(flagLeft+.5*starXSpace + starXSpace*x,
                             flagTop +.5*starYSpace + starYSpace*y,
                             starRadius, 0, 2*Math.PI, false);
             drawContext.fill();
+            */
+            fillStar(drawContext,
+                    flagLeft+.5*starXSpace + starXSpace*x,
+                    flagTop +.5*starYSpace + starYSpace*y,
+                    starRadius, 5, .5 * starRadius);
         }
     }
+}
+
+function fillStar(drawContext, x, y, radius, points, innerRadius)
+{
+    drawContext.save();
+    drawContext.beginPath();
+    drawContext.translate(x, y);
+    drawContext.moveTo(0, 0-radius);
+    for (var i = 0; i < points; i++) {
+        drawContext.rotate(Math.PI / points);
+        drawContext.lineTo(0, 0 - innerRadius);
+        drawContext.rotate(Math.PI / points);
+        drawContext.lineTo(0, 0 - radius);
+    }
+    drawContext.fill();
+    drawContext.restore();
 }
