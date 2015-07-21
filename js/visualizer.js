@@ -95,55 +95,6 @@ var Visualizer = {
     }
 };
 
-/*var LightShowSource = function (numAverages) {
-    this.x = 0;
-    this.y = 0;
-    this.xVel = 0;
-    this.yVel = 0;
-    this.xAccel = 0;
-    this.yAccel = 0;
-    this.gravityAccel = 2;
-    this.maxVel = 2;
-
-    this.hue = 0;
-
-    this.lastIntensity = 1.0;
-    this.numAverages = numAverages;
-    this.averageIntensity = 1.0;
-    this.averageIntensityTotal = this.numAverages;
-}
-
-LightShowSource.prototype.addXVel = function(toAdd) {
-    this.xVel += toAdd;
-
-    if (this.xVel > this.maxVel)
-        this.xVel = this.maxVel;
-    else if (this.xVel < -1*this.maxVel)
-        this.xVel = -1*this.maxVel;
-}
-
-LightShowSource.prototype.addYVel = function(toAdd) {
-    this.yVel += toAdd;
-
-    if (this.yVel > this.maxVel)
-        this.yVel = this.maxVel;
-    else if (this.yVel < -1*this.maxVel)
-        this.yVel = -1*this.maxVel;
-}
-
-LightShowSource.prototype.physics = function(time) {
-    this.x += this.xVel*time;
-    this.y += this.yVel*time;
-    this.xVel += this.xAccel*time;
-    this.yVel += this.yAccel*time + this.gravityAccel*time;
-}
-
-LightShowSource.prototype.updateAverageIntensity = function(intensity) {
-    this.averageIntensityTotal -= this.averageIntensity;
-    this.averageIntensityTotal += intensity;
-    this.averageIntensity = this.averageIntensityTotal / this.numAverages;
-}*/
-
 /****************************************/
 /* Weighting functions */
 /****************************************/
