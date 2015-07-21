@@ -1,15 +1,20 @@
 var Particle = function (numAverages) {
-    this.x = 0;
-    this.y = 0;
+    this.x      = 0;
+    this.minX   = 0;
+    this.maxX   = 0;
 
-    this.xVel = 0;
-    this.yVel = 0;
+    this.y      = 0;
+    this.minY   = 0;
+    this.maxY   = 0;
+
+    this.xVel   = 0;
+    this.yVel   = 0;
     this.maxVel = 2;
     
     this.xAccel = 0;
     this.yAccel = 0;
 
-    this.hue = 0;
+    this.hue    = 0;
 
     this.numAverages = numAverages;
     this.lastIntensity = 1.0;

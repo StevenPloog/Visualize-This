@@ -95,7 +95,7 @@ var Visualizer = {
     }
 };
 
-var LightShowSource = function (numAverages) {
+/*var LightShowSource = function (numAverages) {
     this.x = 0;
     this.y = 0;
     this.xVel = 0;
@@ -142,7 +142,7 @@ LightShowSource.prototype.updateAverageIntensity = function(intensity) {
     this.averageIntensityTotal -= this.averageIntensity;
     this.averageIntensityTotal += intensity;
     this.averageIntensity = this.averageIntensityTotal / this.numAverages;
-}
+}*/
 
 /****************************************/
 /* Weighting functions */

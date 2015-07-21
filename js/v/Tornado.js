@@ -11,9 +11,10 @@ var Tornado = function(canvas, analyser) {
     var radius = this.canvas.height / this.numLights;
     radius /= 2;
     for (var i = 0; i < this.numLights; i++) {
-        this.lights.push(new LightShowSource(1000));
+        this.lights.push(new Particle(1000));
         this.lights[i].x = this.canvas.width/2;
         this.lights[i].y = this.canvas.height - (radius + 2*radius*i);
+        this.lights[i].maxVel = 2;
     }
 
 }
@@ -56,13 +57,10 @@ Tornado.prototype.draw = function() {
         var direction = 1;
         if (Math.random() > .5)
             direction = -1;
-        this.lights[i].addXVel(percent * direction);
+        this.lights[i].xVel += percent * direction;
+        if      (this.lights[i].xVel > this.lights[i].maxVel) this.lights[i].xVel = this.lights[i].maxVel;
+        else if (this.lights[i].xVel < -this.lights[i].maxVel) this.lights[i].xVel = -this.lights[i].maxVel;
         this.lights[i].x += this.lights[i].xVel;
-
-        var directionY = 1;
-        if (Math.random() > .5)
-            directionY = -1;
-        this.lights[i].addYVel(percent * directionY);
 
         if (this.lights[i].x >= .5*canvas.width + .65*canvas.height - .5*this.lights[i].y) {
             this.lights[i].xVel = -this.lights[i].xVel;
