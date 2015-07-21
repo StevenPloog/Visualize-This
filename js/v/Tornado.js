@@ -14,6 +14,10 @@ var Tornado = function(canvas, analyser) {
         this.lights.push(new Particle(1000));
         this.lights[i].x = this.canvas.width/2;
         this.lights[i].y = this.canvas.height - (radius + 2*radius*i);
+
+        this.lights[i].maxX = .5*canvas.width + .65*canvas.height - .5*this.lights[i].y;
+        this.lights[i].minX = .5*canvas.width - (.65*canvas.height - .5*this.lights[i].y);
+
         this.lights[i].maxVel = 2;
     }
 
@@ -62,10 +66,10 @@ Tornado.prototype.draw = function() {
         else if (this.lights[i].xVel < -this.lights[i].maxVel) this.lights[i].xVel = -this.lights[i].maxVel;
         this.lights[i].x += this.lights[i].xVel;
 
-        if (this.lights[i].x >= .5*canvas.width + .65*canvas.height - .5*this.lights[i].y) {
+        if (this.lights[i].x >= this.lights[i].maxX) {
             this.lights[i].xVel = -this.lights[i].xVel;
             this.lights[i].x -= this.lights[i].maxVel;
-        } else if (this.lights[i].x <= .5*canvas.width - (.65*canvas.height - .5*this.lights[i].y)) {
+        } else if (this.lights[i].x <= this.lights[i].minX) {
             this.lights[i].xVel = -this.lights[i].xVel;
             this.lights[i].x += this.lights[i].maxVel;
         }
