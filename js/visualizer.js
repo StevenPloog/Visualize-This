@@ -74,6 +74,9 @@ var Visualizer = {
                 case 'flag':
                     Visualizer.visualizerRef = new Flag($('#vt-canvas').get(0), Visualizer.analyser);
                     break;
+                case 'eq':
+                    Visualizer.visualizerRef = new Eq($('#vt-canvas').get(0), Visualizer.analyser);
+                    break;
                 default:
                     break;
             }

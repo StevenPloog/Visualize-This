@@ -24,7 +24,7 @@
 
                     "js/v/Spectrum.js", "js/v/SpectrumMiddle.js", "js/v/Circles.js", "js/v/Spins.js", "js/v/SpiralsInverted.js",
                     "js/v/RisenSun.js", "js/v/RisingSun.js", "js/v/Spirals.js", "js/v/Tornado.js", "js/v/BouncingBalls.js",
-                    "js/v/Flag.js"
+                    "js/v/Flag.js", "js/v/Eq.js"
                 ]
         },
 
@@ -35,7 +35,7 @@
 
                     "js/v/Spectrum.js", "js/v/SpectrumMiddle.js", "js/v/Circles.js", "js/v/Spins.js", "js/v/SpiralsInverted.js",
                     "js/v/RisenSun.js", "js/v/RisingSun.js", "js/v/Spirals.js", "js/v/Tornado.js", "js/v/BouncingBalls.js",
-                    "js/v/Flag.js"
+                    "js/v/Flag.js", "js/v/Eq.js"
                 ]
         }
     ],
