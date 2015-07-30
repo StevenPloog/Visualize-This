@@ -4,7 +4,9 @@ var Eq = function(canvas, analyser) {
     this.analyser = analyser;
     this.drawContext = this.canvas.getContext('2d');
 
-    this.targetFrequencies = [40, 80, 160, 400, 1000, 2500, 6250, 16000];
+    this.targetFrequencies = [63, 160, 400, 1000, 2500, 6250, 16000];
+    this.lastPercentage = [0, 0, 0, 0, 0, 0, 0];
+    this.hue = [0, 0, 0, 0, 0, 0, 0];
 
 }
 
@@ -39,10 +41,17 @@ Eq.prototype.draw = function () {
         value /= Visualizer.decibelRange;
 
         var barWidth = this.canvas.width / this.targetFrequencies.length;
-        var barHeight = value * this.canvas.height;
+        var barHeight = this.canvas.height;// * value;
 
+        var percent = 100*Math.abs(this.lastPercentage[i] - value);
 
-        this.drawContext.fillStyle = 'hsl(' + 50*i + ', 100%, 50%)';
-        this.drawContext.fillRect(i * barWidth, this.canvas.height, barWidth, -barHeight);
+        if (percent > 2 + .05*i) {
+            this.hue[i] += 50;//Math.random() * 360;
+        }
+
+        this.drawContext.fillStyle = 'hsl(' + this.hue[i] + ', 100%, ' + 50 + '%)';
+        this.drawContext.fillRect(i * barWidth + barWidth/4, this.canvas.height, barWidth/2, -barHeight);
+
+        this.lastPercentage[i] = value;
     }
 }
