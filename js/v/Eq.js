@@ -12,6 +12,8 @@ var Eq = function(canvas, analyser) {
 
 Eq.prototype.draw = function () {
 
+    this.targetFrequencies = [120, 400, 2000, 6250, 12500 ];
+
     var freqDomain = new Float32Array(this.analyser.frequencyBinCount);
 
     this.drawContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
