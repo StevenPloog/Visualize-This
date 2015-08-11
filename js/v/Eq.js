@@ -52,7 +52,12 @@ Eq.prototype.draw = function () {
         }
 
         this.drawContext.fillStyle = 'hsl(' + this.hue[i] + ', 100%, ' + 50 + '%)';
-        this.drawContext.fillRect(i * barWidth + barWidth/4, this.canvas.height, barWidth/2, -barHeight);
+        this.drawContext.fillRect(i * barWidth/2 + barWidth/8, this.canvas.height, barWidth/4, -barHeight);
+        // mirror this.drawContext.fillRect(this.canvas.width - (i*barWidth/2 + barWidth/8), this.canvas.height, -barWidth/4, -barHeight);
+        this.drawContext.fillRect(i * barWidth/2 + barWidth/8 + this.targetFrequencies.length*barWidth/2, this.canvas.height, barWidth/4, -barHeight);
+
+        // mirror lows in middle this.drawContext.fillRect(i * barWidth/2 + barWidth/8 + this.targetFrequencies.length*barWidth/2, this.canvas.height, barWidth/4, -barHeight);
+        // mirror lows in middle this.drawContext.fillRect(this.canvas.width - (i*barWidth/2 + barWidth/8 + this.targetFrequencies.length*barWidth/2), this.canvas.height, -barWidth/4, -barHeight);
 
         this.lastPercentage[i] = value;
     }
