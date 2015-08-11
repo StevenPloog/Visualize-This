@@ -48,7 +48,7 @@ $canvas-background #00FF00;
 	height: 100%;
 	top: 0px;
 	left: 0px;
-	z-index: 1500;
+	z-index: 11;
 	
 	&.vt-main-show {
 		display: visible;
