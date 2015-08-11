@@ -8,15 +8,17 @@ function ytInject() {
     injectStyle();
     injectCanvas();
     injectButton();
-    
+
     $(window).resize(function() {
-        $('#vt-main-div').height($('.html5-video-container').height());
-        $('#vt-main-div').width($('.html5-video-container').width());
+        var main = $('#vt-main-div').get(0);
+        var canvas = $('#vt-canvas').get(0);
+
+        main.style.height = $('.video-stream').height();
+        main.style.width = $('.video-stream').width();
         $('#vt-canvas').height($('vt-main-div').height());
         $('#vt-canvas').width($('vt-main-div').width());
-        
-        //Scale the canvas to achieve proper resolution        
-        var canvas = $('#vt-canvas').get(0);
+
+        //Scale the canvas to achieve proper resolution
         canvas.width=$('#vt-main-div').width()*window.devicePixelRatio;
         canvas.height=$('#vt-main-div').height()*window.devicePixelRatio;
         canvas.style.width=$('#vt-main-div').width() + "px";
@@ -42,7 +44,7 @@ function injectCanvas() {
     });
 
     main.html('<canvas id="vt-canvas" style="background-color:black;"></canvas>');
-    
+
     //$.get(chrome.extension.getURL('html/vt-main.html'), function(htmls) {
     //    main.html(htmls);
     //});
@@ -57,15 +59,15 @@ function injectButton() {
         class: 'ytp-button yt-button',
         style: 'background: url('+chrome.extension.getURL('images/icon16.png')+') no-repeat center'
     });
-    
+
     /*<div class="ytp-tooltip" style="left: 1175px; top: 723px; display: block;">
         <div class="ytp-tooltip-body" style="left: -34.5px;">
             <span class="ytp-text-tooltip">Watch Later</span>
         </div>
     <div class="ytp-tooltip-arrow"></div></div>*/
-                
-    $('.html5-player-chrome').append(button);
-    
+
+    $('.ytp-chrome-controls').append(button);
+
     button.on('click', function(e) {
         if ($('#vt-menu-dropdown').length) {
             if ($('#vt-main-div').css('display') == 'none') {
@@ -93,8 +95,8 @@ function injectButton() {
             //Start visualizers
             menu.on('click', '.yt-uix-button-menu-item', function(e) {
                 $('#vt-main-div').fadeIn();
-                $('#vt-main-div').height($('.html5-video-container').height());
-                $('#vt-main-div').width($('.html5-video-container').width());
+                $('#vt-main-div').height($('.video-stream').height());
+                $('#vt-main-div').width($('.video-stream').width());
                 $('#vt-canvas').height($('vt-main-div').height());
                 $('#vt-canvas').width($('vt-main-div').width());
 
@@ -117,14 +119,14 @@ function injectButton() {
             $('body').click(function(e) { $('#vt-menu-dropdown').css('display', 'none'); });
 
             $('.html5-video-player').append(menu);
-            
+
             $('#vt-menu-dropdown').css({
                 position: 'absolute',
                 left: $('.html5-video-player').width() - 160,
                 bottom: '28px'
             });
         }
-        
+
         //Keep menu up if button is pressed again
         e.stopPropagation();
     });
