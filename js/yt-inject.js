@@ -75,7 +75,7 @@ function injectButton() {
                     display: '',
                     position: 'absolute',
                     left: $('.html5-video-player').width() - 160,
-                    bottom: '28px'
+                    bottom: '49px'
                 });
             } else {
                 $('#vt-main-div').fadeOut();
